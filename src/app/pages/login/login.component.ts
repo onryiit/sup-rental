@@ -28,7 +28,7 @@ export class LoginComponent {
     this.error = '';
     const { email, password } = this.form.value;
     this.auth.login(email, password).subscribe({
-      next: user => { this.auth.setUser(user); this.router.navigate(['/home']); },
+      next: () => this.router.navigate(['/home']),
       error: err => { this.error = err.message; this.loading = false; },
     });
   }
