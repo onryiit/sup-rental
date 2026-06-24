@@ -1,6 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://api.your-domain.com/api',
-  iotEndpoint: 'your-iot-endpoint.iot.eu-west-1.amazonaws.com',
-  paytrMerchantId: 'YOUR_MERCHANT_ID',
+  // dev account
+  apiUrl: 'https://1xas0yqwmg.execute-api.eu-central-1.amazonaws.com/dev',
 };
