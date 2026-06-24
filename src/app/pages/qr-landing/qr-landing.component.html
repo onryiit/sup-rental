@@ -1,0 +1,58 @@
+<div class="landing-page">
+  <div class="header">
+    <div class="logo">🏄 SUP Kiralama</div>
+  </div>
+
+  <div class="content" *ngIf="!loading">
+    <div class="error-card" *ngIf="error">
+      <div class="error-icon">⚠️</div>
+      <h2>Hata</h2>
+      <p>{{ error }}</p>
+    </div>
+
+    <div class="sup-card" *ngIf="sup && !error">
+      <div class="sup-image">
+        <div class="sup-emoji">🏄</div>
+      </div>
+
+      <div class="sup-info">
+        <h1>{{ sup.name }}</h1>
+        <div class="location" *ngIf="beach">
+          <span class="icon">📍</span>
+          <span>{{ beach.name }} — {{ beach.location }}</span>
+        </div>
+        <div class="cabinet">
+          <span class="icon">🔒</span>
+          <span>Kabin #{{ sup.cabinetNumber }}</span>
+        </div>
+      </div>
+
+      <div class="status-badge" [class]="'status-' + sup.status">
+        {{ statusLabel }}
+      </div>
+
+      <div class="price-info">
+        <div class="price-row"><span>30 dakika</span><strong>₺150</strong></div>
+        <div class="price-row"><span>1 saat</span><strong>₺250</strong></div>
+        <div class="price-row"><span>2 saat</span><strong>₺400</strong></div>
+        <div class="price-row"><span>3 saat</span><strong>₺550</strong></div>
+      </div>
+
+      <button
+        class="btn-rent"
+        [disabled]="sup.status !== 'available'"
+        (click)="rent()">
+        {{ sup.status === 'available' ? 'Kirala' : 'Şu An Müsait Değil' }}
+      </button>
+
+      <p class="note" *ngIf="sup.status !== 'available'">
+        Bu SUP şu an {{ statusLabel | lowercase }}. Lütfen başka bir SUP seçin.
+      </p>
+    </div>
+  </div>
+
+  <div class="loading" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Yükleniyor...</p>
+  </div>
+</div>

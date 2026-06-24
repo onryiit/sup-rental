@@ -1,0 +1,195 @@
+.scanner-page {
+  min-height: 100vh;
+  background: #0a0e1a;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Segoe UI', sans-serif;
+  color: white;
+}
+
+/* ── Header ── */
+.scanner-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 20px 12px;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(8px);
+  position: relative;
+  z-index: 10;
+}
+
+.back-btn {
+  background: rgba(255,255,255,0.12);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-size: 14px;
+  cursor: pointer;
+  &:hover { background: rgba(255,255,255,0.2); }
+}
+
+.title {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+/* ── Camera Area ── */
+.camera-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  position: relative;
+}
+
+.qr-reader {
+  width: 100%;
+  max-width: 340px;
+  border-radius: 16px;
+  overflow: hidden;
+  // html5-qrcode injects video here
+  video { border-radius: 16px; }
+}
+
+/* Overlay corners drawn on top */
+.scan-overlay {
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  pointer-events: none;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.scan-corner {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border-color: #00d4ff;
+  border-style: solid;
+  &.tl { top: 0;    left: 0;  border-width: 3px 0 0 3px; border-radius: 4px 0 0 0; }
+  &.tr { top: 0;    right: 0; border-width: 3px 3px 0 0; border-radius: 0 4px 0 0; }
+  &.bl { bottom: 0; left: 0;  border-width: 0 0 3px 3px; border-radius: 0 0 0 4px; }
+  &.br { bottom: 0; right: 0; border-width: 0 3px 3px 0; border-radius: 0 0 4px 0; }
+}
+
+.scan-line {
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00d4ff, transparent);
+  animation: scanMove 2s ease-in-out infinite;
+  top: 10%;
+}
+
+@keyframes scanMove {
+  0%   { top: 10%; opacity: 1; }
+  50%  { top: 85%; opacity: 1; }
+  100% { top: 10%; opacity: 1; }
+}
+
+.scan-hint {
+  font-size: 13px;
+  color: rgba(255,255,255,0.6);
+  text-align: center;
+  margin-top: 24px;
+  max-width: 280px;
+  line-height: 1.5;
+}
+
+/* ── Feedback Cards ── */
+.feedback-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 28px;
+  text-align: center;
+  gap: 10px;
+
+  .fb-icon { font-size: 56px; line-height: 1; }
+  h2 { font-size: 22px; font-weight: 700; margin: 4px 0 0; }
+  p  { font-size: 14px; color: rgba(255,255,255,0.65); line-height: 1.5; max-width: 280px; margin: 0; }
+  code {
+    background: rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 13px;
+    color: #00d4ff;
+  }
+
+  &.success { background: radial-gradient(ellipse at center, #083a22 0%, #0a0e1a 70%); }
+  &.warn    { background: radial-gradient(ellipse at center, #3a2c08 0%, #0a0e1a 70%); }
+  &.error   { background: radial-gradient(ellipse at center, #3a0808 0%, #0a0e1a 70%); }
+}
+
+.btn-retry {
+  background: #0077b6;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+/* ── Manual Entry ── */
+.manual-section {
+  padding: 0 20px 28px;
+  background: rgba(0,0,0,0.3);
+}
+
+.divider-or {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 0 14px;
+  &::before, &::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.15); }
+  span { font-size: 12px; color: rgba(255,255,255,0.4); white-space: nowrap; }
+}
+
+.manual-row {
+  display: flex;
+  gap: 8px;
+}
+
+.manual-input {
+  flex: 1;
+  background: rgba(255,255,255,0.1);
+  border: 1.5px solid rgba(255,255,255,0.2);
+  border-radius: 12px;
+  padding: 13px 16px;
+  font-size: 15px;
+  color: white;
+  outline: none;
+  &::placeholder { color: rgba(255,255,255,0.3); }
+  &:focus { border-color: #00d4ff; }
+}
+
+.btn-manual {
+  background: linear-gradient(135deg, #0077b6, #00b4d8);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 13px 18px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.manual-hint {
+  font-size: 12px;
+  color: rgba(255,255,255,0.35);
+  text-align: center;
+  margin: 10px 0 0;
+  strong { color: rgba(255,255,255,0.55); }
+}

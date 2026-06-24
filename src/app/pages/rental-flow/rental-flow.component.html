@@ -1,0 +1,75 @@
+<div class="flow-page">
+  <div class="header">
+    <button class="back-btn" routerLink="/rent" [queryParams]="{qr: qrCode}">← Geri</button>
+    <div class="logo">🏄 SUP Kiralama</div>
+  </div>
+
+  <div class="content" *ngIf="!loading && sup">
+    <h2>Kiralama Detayları</h2>
+    <div class="sup-summary">
+      <span class="sup-name">{{ sup.name }}</span>
+      <span class="sep">•</span>
+      <span>Kabin #{{ sup.cabinetNumber }}</span>
+      <span *ngIf="beach" class="sep">•</span>
+      <span *ngIf="beach">{{ beach.name }}</span>
+    </div>
+
+    <!-- Duration Selection -->
+    <div class="section">
+      <h3>Süre Seçin</h3>
+      <div class="duration-grid">
+        <button
+          *ngFor="let d of durations"
+          class="duration-card"
+          [class.selected]="selectedDuration?.minutes === d.minutes"
+          (click)="selectDuration(d)">
+          <div class="dur-label">{{ d.label }}</div>
+          <div class="dur-price">₺{{ d.price }}</div>
+        </button>
+      </div>
+    </div>
+
+    <!-- User Info -->
+    <div class="section" [formGroup]="form">
+      <h3>İletişim Bilgileri</h3>
+      <div class="field">
+        <label>Adınız</label>
+        <input type="text" formControlName="name" placeholder="Ad Soyad" />
+        <span class="field-error" *ngIf="form.get('name')?.touched && form.get('name')?.invalid">
+          Ad gerekli
+        </span>
+      </div>
+      <div class="field">
+        <label>Telefon Numarası</label>
+        <input type="tel" formControlName="phone" placeholder="05xx xxx xx xx" />
+        <span class="field-error" *ngIf="form.get('phone')?.touched && form.get('phone')?.invalid">
+          Geçerli bir Türk telefon numarası girin
+        </span>
+      </div>
+    </div>
+
+    <!-- Summary -->
+    <div class="summary-box" *ngIf="selectedDuration">
+      <div class="summary-row">
+        <span>Süre</span>
+        <strong>{{ selectedDuration.label }}</strong>
+      </div>
+      <div class="summary-row total">
+        <span>Toplam</span>
+        <strong>₺{{ selectedDuration.price }}</strong>
+      </div>
+    </div>
+
+    <button
+      class="btn-pay"
+      [disabled]="!form.valid || !selectedDuration || submitting"
+      (click)="proceed()">
+      {{ submitting ? 'Yönlendiriliyor...' : 'Ödemeye Geç →' }}
+    </button>
+  </div>
+
+  <div class="loading" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Yükleniyor...</p>
+  </div>
+</div>

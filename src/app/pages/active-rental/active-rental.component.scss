@@ -1,0 +1,156 @@
+.meter-page {
+  min-height: 100vh;
+  background: #0a0e1a;
+  font-family: 'Segoe UI', sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── States ── */
+.state-screen {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 14px; padding: 40px 24px; text-align: center; color: white;
+  .empty-icon { font-size: 52px; }
+  h2 { font-size: 20px; font-weight: 700; margin: 0; }
+  p  { font-size: 14px; color: rgba(255,255,255,0.55); margin: 0; }
+}
+
+.wave-spinner {
+  display: flex; align-items: flex-end; gap: 5px; height: 36px;
+  div {
+    width: 8px; background: #00b4d8; border-radius: 4px;
+    animation: wave 1s ease-in-out infinite;
+    &:nth-child(1) { animation-delay: 0s;    height: 20px; }
+    &:nth-child(2) { animation-delay: 0.15s; height: 32px; }
+    &:nth-child(3) { animation-delay: 0.3s;  height: 20px; }
+  }
+}
+@keyframes wave { 0%,100% { transform: scaleY(1); } 50% { transform: scaleY(0.4); } }
+
+/* ── Active Screen ── */
+.active-screen {
+  flex: 1; display: flex; flex-direction: column;
+  gap: 14px; padding-bottom: 32px;
+}
+
+.top-bar {
+  background: linear-gradient(135deg, #0f172a, #0c2a40);
+  padding: 20px 20px 16px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.sup-badge { font-size: 15px; font-weight: 700; color: #00d4ff; }
+.rental-id { font-size: 11px; color: rgba(255,255,255,0.4); font-family: monospace; }
+
+.overdue-banner {
+  background: #7f1d1d; color: #fca5a5;
+  padding: 14px 20px; font-size: 14px; font-weight: 600;
+  text-align: center; line-height: 1.4;
+}
+
+/* ── Live Meter Card ── */
+.meter-card {
+  background: linear-gradient(160deg, #0f172a, #1e293b);
+  margin: 0 16px;
+  border-radius: 24px;
+  padding: 28px 24px 22px;
+  border: 1px solid rgba(0,212,255,0.15);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+}
+
+.meter-label {
+  font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.4);
+  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;
+}
+
+.meter-amount {
+  font-size: 64px; font-weight: 900;
+  color: #00d4ff;
+  font-variant-numeric: tabular-nums;
+  line-height: 1; margin-bottom: 4px;
+  text-shadow: 0 0 40px rgba(0,212,255,0.4);
+}
+
+.meter-sub {
+  font-size: 13px; color: rgba(255,255,255,0.4); margin-bottom: 24px;
+}
+
+.progress-wrap { display: flex; flex-direction: column; gap: 8px; }
+
+.progress-bar {
+  height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;
+  .progress-fill {
+    height: 100%; border-radius: 3px;
+    transition: width 0.5s ease, background 0.5s ease;
+  }
+}
+
+.progress-labels {
+  display: flex; justify-content: space-between;
+  font-size: 12px; color: rgba(255,255,255,0.4);
+}
+
+/* ── Pre-auth Card ── */
+.preauth-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  margin: 0 16px; border-radius: 16px; padding: 16px;
+}
+
+.pa-row {
+  display: flex; align-items: center; gap: 12px;
+  .pa-icon { font-size: 22px; flex-shrink: 0; }
+  .pa-title { font-size: 14px; font-weight: 600; color: white; }
+  .pa-sub   { font-size: 12px; color: rgba(255,255,255,0.45); margin-top: 2px; line-height: 1.4; }
+  .pa-amount { margin-left: auto; font-size: 20px; font-weight: 800; color: #fbbf24; white-space: nowrap; }
+}
+
+/* ── Info Card ── */
+.info-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  margin: 0 16px; border-radius: 16px; padding: 6px 16px;
+}
+
+.info-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 0; font-size: 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.6);
+  &:last-child { border-bottom: none; }
+  span:first-child { font-size: 16px; width: 22px; text-align: center; }
+  span:nth-child(2) { flex: 1; }
+  strong { color: white; }
+}
+
+/* ── Return Box ── */
+.return-box {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  margin: 0 16px; border-radius: 16px; padding: 18px;
+  .return-title {
+    font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.5);
+    text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 14px;
+  }
+}
+
+.return-step {
+  display: flex; align-items: flex-start; gap: 12px;
+  font-size: 13px; color: rgba(255,255,255,0.7);
+  padding: 7px 0; line-height: 1.4;
+  .rs-num {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: rgba(0,212,255,0.2); color: #00d4ff;
+    font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+}
+
+/* ── Buttons ── */
+.btn-primary, .btn-home {
+  display: block; margin: 4px 16px 0;
+  background: linear-gradient(135deg, #0077b6, #0096c7);
+  color: white; border: none; border-radius: 14px; padding: 16px;
+  font-size: 16px; font-weight: 700; cursor: pointer; text-align: center;
+  &:hover { opacity: 0.9; }
+}

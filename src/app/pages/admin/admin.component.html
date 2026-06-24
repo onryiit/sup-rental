@@ -1,0 +1,112 @@
+<div class="admin-page">
+  <div class="sidebar">
+    <div class="brand">🏄 SUP Admin</div>
+    <nav>
+      <button [class.active]="activeTab==='dashboard'" (click)="setTab('dashboard')">📊 Dashboard</button>
+      <button [class.active]="activeTab==='sups'" (click)="setTab('sups')">🏄 SUP'lar</button>
+      <button [class.active]="activeTab==='rentals'" (click)="setTab('rentals')">📋 Kiralamalar</button>
+    </nav>
+  </div>
+
+  <div class="main">
+    <!-- DASHBOARD -->
+    <div *ngIf="activeTab==='dashboard'">
+      <h1>Dashboard</h1>
+      <div class="stats-grid">
+        <div class="stat-card green">
+          <div class="stat-value">{{ availableCount }}</div>
+          <div class="stat-label">Müsait SUP</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-value">{{ rentedCount }}</div>
+          <div class="stat-label">Kirada SUP</div>
+        </div>
+        <div class="stat-card orange">
+          <div class="stat-value">{{ activeRentals.length }}</div>
+          <div class="stat-label">Aktif Kiralama</div>
+        </div>
+        <div class="stat-card purple">
+          <div class="stat-value">₺{{ todayRevenue }}</div>
+          <div class="stat-label">Bugün Gelir</div>
+        </div>
+      </div>
+
+      <h2>Aktif Kiralamalar</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Kiralama ID</th><th>QR Kod</th><th>Plaj</th><th>Kabin</th><th>Süre</th><th>Tutar</th></tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let r of activeRentals">
+              <td><code>{{ r.id }}</code></td>
+              <td>{{ r.qrCode }}</td>
+              <td>{{ getBeachName(r.beachId) }}</td>
+              <td>#{{ r.cabinetNumber }}</td>
+              <td>{{ r.durationMinutes }} dk</td>
+              <td><strong>₺{{ r.price }}</strong></td>
+            </tr>
+            <tr *ngIf="activeRentals.length === 0">
+              <td colspan="6" class="empty">Aktif kiralama yok</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SUPS -->
+    <div *ngIf="activeTab==='sups'">
+      <h1>SUP'lar</h1>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Ad</th><th>QR Kod</th><th>Plaj</th><th>Kabin</th><th>Durum</th><th>İşlem</th></tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let s of sups">
+              <td>{{ s.name }}</td>
+              <td><code>{{ s.qrCode }}</code></td>
+              <td>{{ getBeachName(s.beachId) }}</td>
+              <td>#{{ s.cabinetNumber }}</td>
+              <td>
+                <span class="badge" [class]="'badge-' + s.status">
+                  {{ s.status === 'available' ? 'Müsait' : s.status === 'rented' ? 'Kiralanmış' : 'Bakımda' }}
+                </span>
+              </td>
+              <td>
+                <button class="btn-sm" (click)="unlockManual(s)">🔓 Kilidi Aç</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- RENTALS -->
+    <div *ngIf="activeTab==='rentals'">
+      <h1>Tüm Kiralamalar</h1>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>ID</th><th>QR</th><th>Telefon</th><th>Süre</th><th>Tutar</th><th>Ödeme Ref</th><th>Durum</th></tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let r of rentals">
+              <td><code>{{ r.id }}</code></td>
+              <td>{{ r.qrCode }}</td>
+              <td>{{ r.phoneNumber }}</td>
+              <td>{{ r.durationMinutes }} dk</td>
+              <td><strong>₺{{ r.price }}</strong></td>
+              <td><code>{{ r.paymentRef }}</code></td>
+              <td>
+                <span class="badge" [class]="'badge-' + r.status">
+                  {{ r.status === 'active' ? 'Aktif' : r.status === 'completed' ? 'Tamamlandı' : r.status === 'pending_payment' ? 'Ödeme Bekliyor' : 'İptal' }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

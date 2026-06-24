@@ -1,0 +1,92 @@
+<div class="card-page">
+  <div class="page-header">
+    <button class="back-btn" (click)="goHome()">← Geri</button>
+    <span class="header-title">Kart Yönetimi</span>
+    <span></span>
+  </div>
+
+  <!-- Loading -->
+  <div class="state-screen" *ngIf="state === 'loading'">
+    <div class="wave-spinner"><div></div><div></div><div></div></div>
+    <p>Yükleniyor...</p>
+  </div>
+
+  <!-- Has card -->
+  <div class="content" *ngIf="state === 'has-card' && cardInfo">
+    <div class="card-visual">
+      <div class="card-chip">▬▬</div>
+      <div class="card-number">•••• •••• •••• {{ cardInfo.lastFourDigits }}</div>
+      <div class="card-footer">
+        <span>{{ cardInfo.cardAlias }}</span>
+        <span>Kayıtlı Kart</span>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <span>✅</span>
+      <div>
+        <strong>Kart kayıtlı</strong>
+        <p>Kiralama başlatınca kartınızdan ₺500 teminat bloke edilir. SUP'u iade edince gerçek kullandığınız kadar ücret alınır.</p>
+      </div>
+    </div>
+
+    <div class="meter-explainer">
+      <h3>Sayaç Nasıl Çalışır?</h3>
+      <div class="step-row">
+        <span class="step-icon">🔓</span>
+        <div><strong>Kabin açılır</strong><p>₺500 teminat bloke edilir (kesilmez)</p></div>
+      </div>
+      <div class="step-row">
+        <span class="step-icon">⏱</span>
+        <div><strong>Sayaç başlar</strong><p>₺3 / dakika ücretlendirilir</p></div>
+      </div>
+      <div class="step-row">
+        <span class="step-icon">🔒</span>
+        <div><strong>SUP iade edilir</strong><p>Kabin kapısı kapanır, sadece kullandığınız kadar çekilir</p></div>
+      </div>
+      <div class="step-row warning">
+        <span class="step-icon">⚠️</span>
+        <div><strong>24 saat aşılırsa</strong><p>₺500 tamamı çekilir ve SMS ile bildirilir</p></div>
+      </div>
+    </div>
+
+    <button class="btn-delete" (click)="deleteCard()">Kartı Kaldır</button>
+  </div>
+
+  <!-- iyzico Card Save Form -->
+  <div class="content" *ngIf="state === 'form'">
+    <div class="form-info">
+      <div class="form-info-icon">💳</div>
+      <h2>Kart Ekle</h2>
+      <p>Kart bilgileriniz iyzico güvencesiyle şifreli olarak saklanır. Biz kart numaranızı görmeyiz.</p>
+    </div>
+
+    <div class="iyzico-wrapper">
+      <div #iyzicoContainer id="iyzipay-checkout-form" class="responsive"></div>
+    </div>
+
+    <!-- DEV ONLY: iyzico callback'i atlatır -->
+    <div class="dev-box">
+      <p>🛠 <strong>Geliştirme Modu</strong> — iyzico sandbox callback'i çalışmıyorsa:</p>
+      <button class="btn-dev" (click)="devInjectCard()">Test Kartı Kaydet (5528...0008)</button>
+    </div>
+
+    <p class="secure-note">🔒 PCI DSS Level 1 · iyzico güvencesi</p>
+  </div>
+
+  <!-- Success -->
+  <div class="state-screen success" *ngIf="state === 'success'">
+    <div class="success-icon">✅</div>
+    <h2>Kart Eklendi!</h2>
+    <p>Artık QR okutup anında kiralama başlatabilirsiniz.</p>
+    <button class="btn-primary" routerLink="/home">Ana Sayfaya Dön</button>
+  </div>
+
+  <!-- Error -->
+  <div class="state-screen error" *ngIf="state === 'error'">
+    <div class="error-icon">❌</div>
+    <h2>Hata</h2>
+    <p>{{ errorMessage }}</p>
+    <button class="btn-primary" (click)="loadCard()">Tekrar Dene</button>
+  </div>
+</div>

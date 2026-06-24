@@ -1,0 +1,122 @@
+<div class="summary-page">
+
+  <div class="page-header">
+    <button class="back-btn" (click)="goBack()">← Geri</button>
+    <span class="header-title">Kiralama</span>
+    <span></span>
+  </div>
+
+  <div class="loading-state" *ngIf="loading">
+    <div class="wave-spinner"><div></div><div></div><div></div></div>
+    <p>SUP bilgisi yükleniyor...</p>
+  </div>
+
+  <div class="empty-state" *ngIf="!loading && notFound">
+    <span>🤔</span>
+    <h2>SUP Bulunamadı</h2>
+    <p>Bu QR kod sistemde kayıtlı değil.</p>
+    <button class="btn-primary" routerLink="/scan">Tekrar Tara</button>
+  </div>
+
+  <div class="content" *ngIf="!loading && sup">
+
+    <!-- SUP Card -->
+    <div class="sup-card" [class.unavailable]="sup.status !== 'available'">
+      <div class="sup-visual">
+        <span class="sup-emoji">🏄</span>
+        <div class="status-dot" [class]="'dot-' + sup.status"></div>
+      </div>
+      <div class="sup-details">
+        <h2>{{ sup.name }}</h2>
+        <div class="meta-row" *ngIf="beach">
+          <span>📍</span><span>{{ beach.name }}</span>
+        </div>
+        <div class="meta-row">
+          <span>🔒</span><span>Kabin #{{ sup.cabinetNumber }}</span>
+        </div>
+        <div class="meta-row">
+          <span class="status-text" [class]="'st-' + sup.status">● {{ statusLabel }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="warning-box" *ngIf="sup.status !== 'available'">
+      ⚠️ Bu SUP şu an <strong>{{ statusLabel | lowercase }}</strong>. Başka bir SUP'un QR'ını taratın.
+    </div>
+
+    <!-- Meter Pricing (only when available) -->
+    <ng-container *ngIf="sup.status === 'available'">
+
+      <!-- Pricing info -->
+      <div class="pricing-card" *ngIf="meterConfig">
+        <div class="pricing-headline">
+          <span class="price-big">₺{{ meterConfig.pricePerMinute }}</span>
+          <span class="price-unit">/ dakika</span>
+        </div>
+        <p class="pricing-sub">Kullandığın kadar öde · Kabin kapanınca sayaç durur</p>
+
+        <div class="pricing-rows">
+          <div class="pricing-row">
+            <span>🔒 Teminat (bloke)</span>
+            <strong>₺{{ meterConfig.preAuthAmount }}</strong>
+          </div>
+          <div class="pricing-row">
+            <span>⏱ Max süre</span>
+            <strong>{{ meterConfig.maxHours }} saat</strong>
+          </div>
+          <div class="pricing-row">
+            <span>💰 Max ücret</span>
+            <strong>₺{{ maxCost }}</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card status -->
+      <div class="card-status" *ngIf="auth.isLoggedIn">
+        <div class="cs-left">
+          <span class="cs-icon" *ngIf="cardInfo?.hasCard">💳</span>
+          <span class="cs-icon" *ngIf="!cardInfo?.hasCard">⚠️</span>
+          <div>
+            <div class="cs-title" *ngIf="cardInfo?.hasCard">
+              Kart kayıtlı · •••• {{ cardInfo?.lastFourDigits }}
+            </div>
+            <div class="cs-title warn" *ngIf="!cardInfo?.hasCard">
+              Kart eklemeden kiralama yapılamaz
+            </div>
+            <div class="cs-sub">Teminat bu karta bloke edilecek</div>
+          </div>
+        </div>
+        <button class="cs-change" routerLink="/card-setup">
+          {{ cardInfo?.hasCard ? 'Değiştir' : 'Kart Ekle' }}
+        </button>
+      </div>
+
+      <!-- How it works -->
+      <div class="how-card">
+        <div class="how-row">
+          <span class="how-num">1</span>
+          <span>Kirala → ₺{{ meterConfig?.preAuthAmount }} teminat bloke edilir</span>
+        </div>
+        <div class="how-row">
+          <span class="how-num">2</span>
+          <span>SUP'u al, istediğin kadar kullan</span>
+        </div>
+        <div class="how-row">
+          <span class="how-num">3</span>
+          <span>Kabine bırak, kapıyı kapat → sadece kullandığın kadar çekilir</span>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <button class="btn-start" [disabled]="starting" (click)="startRental()">
+        <span *ngIf="!starting">
+          {{ cardInfo?.hasCard ? '🔓 Kiralama Başlat' : '💳 Kart Ekle ve Başlat' }}
+        </span>
+        <span *ngIf="starting" class="btn-spinner"></span>
+      </button>
+
+      <p class="secure-note">🔒 Güvenli ödeme · iyzico · PCI DSS</p>
+
+    </ng-container>
+  </div>
+</div>

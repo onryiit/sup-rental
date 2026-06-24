@@ -1,0 +1,94 @@
+<div class="meter-page">
+
+  <!-- Loading -->
+  <div class="state-screen" *ngIf="state === 'loading'">
+    <div class="wave-spinner"><div></div><div></div><div></div></div>
+    <p>Yükleniyor...</p>
+  </div>
+
+  <!-- No rental -->
+  <div class="state-screen" *ngIf="state === 'no-rental'">
+    <span class="empty-icon">🏖️</span>
+    <h2>Aktif Kiralama Yok</h2>
+    <p>Şu an aktif bir kiralamanız bulunmuyor.</p>
+    <button class="btn-primary" routerLink="/home">Ana Sayfa</button>
+  </div>
+
+  <!-- Active Rental -->
+  <div class="active-screen" *ngIf="state === 'active' && status">
+
+    <!-- Top bar -->
+    <div class="top-bar">
+      <div class="sup-badge">🏄 Aktif Kiralama</div>
+      <div class="rental-id">{{ status.rentalId }}</div>
+    </div>
+
+    <!-- Overdue warning -->
+    <div class="overdue-banner" *ngIf="status.isOverdue">
+      ⚠️ Maksimum süre aşıldı! Kartınızdan ₺{{ status.preAuthAmount }} çekildi.
+    </div>
+
+    <!-- Live cost meter -->
+    <div class="meter-card">
+      <div class="meter-label">Tahmini Ücret</div>
+      <div class="meter-amount">₺{{ status.estimatedPrice | number:'1.2-2' }}</div>
+      <div class="meter-sub">{{ status.pricePerMinute }} ₺ / dakika</div>
+
+      <div class="progress-wrap">
+        <div class="progress-bar">
+          <div class="progress-fill"
+               [style.width.%]="progressPercent"
+               [style.background]="progressColor"></div>
+        </div>
+        <div class="progress-labels">
+          <span>{{ elapsedDisplay }}</span>
+          <span>Max {{ status.maxMinutes / 60 | number:'1.0-0' }} saat</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pre-auth info -->
+    <div class="preauth-card">
+      <div class="pa-row">
+        <span class="pa-icon">🔒</span>
+        <div>
+          <div class="pa-title">Bloke Edilen Teminat</div>
+          <div class="pa-sub">Kabin kapandığında sadece kullandığınız kadar çekilir</div>
+        </div>
+        <div class="pa-amount">₺{{ status.preAuthAmount }}</div>
+      </div>
+    </div>
+
+    <!-- Info -->
+    <div class="info-card">
+      <div class="info-row">
+        <span>⏱</span><span>Geçen süre</span><strong>{{ elapsedDisplay }}</strong>
+      </div>
+      <div class="info-row">
+        <span>💰</span><span>Tahmini ücret</span><strong>₺{{ status.estimatedPrice | number:'1.2-2' }}</strong>
+      </div>
+      <div class="info-row">
+        <span>🔓</span><span>Teminat</span><strong>₺{{ status.preAuthAmount }}</strong>
+      </div>
+    </div>
+
+    <!-- Return instruction -->
+    <div class="return-box">
+      <div class="return-title">SUP'u İade Etmek İçin</div>
+      <div class="return-step">
+        <span class="rs-num">1</span>
+        <span>SUP'u kabin önüne bırakın</span>
+      </div>
+      <div class="return-step">
+        <span class="rs-num">2</span>
+        <span>Kabine tekrar yerleştirip kapıyı kapatın</span>
+      </div>
+      <div class="return-step">
+        <span class="rs-num">3</span>
+        <span>Kabin kilitleniyor → sistem otomatik fatura kesiyor</span>
+      </div>
+    </div>
+
+    <button class="btn-home" (click)="goHome()">Ana Sayfa</button>
+  </div>
+</div>

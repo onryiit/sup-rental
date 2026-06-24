@@ -1,0 +1,60 @@
+<div class="payment-page">
+  <div class="page-header">
+    <button class="back-btn" (click)="goBack()" [disabled]="state === 'verifying'">← Geri</button>
+    <span class="header-title">Güvenli Ödeme</span>
+    <span></span>
+  </div>
+
+  <!-- Loading iyzico form -->
+  <div class="state-screen" *ngIf="state === 'loading'">
+    <div class="iyzico-logo">
+      <span class="iyzico-icon">💳</span>
+      <span>iyzico</span>
+    </div>
+    <div class="wave-spinner">
+      <div></div><div></div><div></div>
+    </div>
+    <p>Ödeme formu hazırlanıyor...</p>
+  </div>
+
+  <!-- Verifying payment -->
+  <div class="state-screen" *ngIf="state === 'verifying'">
+    <div class="verifying-icon">⏳</div>
+    <h2>Ödeme Doğrulanıyor</h2>
+    <p>Lütfen bekleyin...</p>
+  </div>
+
+  <!-- Error -->
+  <div class="state-screen error" *ngIf="state === 'error'">
+    <div class="error-icon">❌</div>
+    <h2>Ödeme Başarısız</h2>
+    <p>{{ errorMessage }}</p>
+    <button class="btn-retry" (click)="initForm()">Tekrar Dene</button>
+  </div>
+
+  <!-- iyzico Checkout Form -->
+  <div class="form-screen" *ngIf="state === 'form' && rental">
+
+    <!-- Order summary bar -->
+    <div class="order-bar">
+      <div class="order-bar-left">
+        <span class="sup-emoji">🏄</span>
+        <div>
+          <div class="order-qr">{{ rental.qrCode }}</div>
+          <div class="order-meta">{{ rental.durationMinutes }} dk · Kabin #{{ rental.cabinetNumber }}</div>
+        </div>
+      </div>
+      <div class="order-price">₺{{ rental.price }}</div>
+    </div>
+
+    <!-- iyzico iframe/form injected here -->
+    <div class="iyzico-wrapper">
+      <div #iyzicoContainer id="iyzipay-checkout-form" class="responsive"></div>
+    </div>
+
+    <div class="secure-footer">
+      <span>🔒</span>
+      <span>256-bit SSL şifreli · iyzico güvencesiyle</span>
+    </div>
+  </div>
+</div>

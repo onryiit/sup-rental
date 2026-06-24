@@ -1,0 +1,61 @@
+<div class="auth-page">
+  <div class="wave-bg"></div>
+  <div class="auth-card">
+    <div class="brand">
+      <div class="brand-icon">🏄</div>
+      <h1>Kayıt Ol</h1>
+      <p>Hemen ücretsiz hesap oluştur</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="field">
+        <label>Ad Soyad</label>
+        <div class="input-wrap">
+          <span class="input-icon">👤</span>
+          <input type="text" formControlName="name" placeholder="Adınız Soyadınız" />
+        </div>
+        <span class="field-error" *ngIf="form.get('name')?.touched && form.get('name')?.invalid">En az 2 karakter</span>
+      </div>
+
+      <div class="field">
+        <label>E-posta</label>
+        <div class="input-wrap">
+          <span class="input-icon">✉️</span>
+          <input type="email" formControlName="email" placeholder="ornek@email.com" />
+        </div>
+        <span class="field-error" *ngIf="form.get('email')?.touched && form.get('email')?.invalid">Geçerli bir e-posta girin</span>
+      </div>
+
+      <div class="field">
+        <label>Telefon</label>
+        <div class="input-wrap">
+          <span class="input-icon">📱</span>
+          <input type="tel" formControlName="phone" placeholder="05xx xxx xx xx" />
+        </div>
+        <span class="field-error" *ngIf="form.get('phone')?.touched && form.get('phone')?.invalid">Geçerli bir Türk numarası girin</span>
+      </div>
+
+      <div class="field">
+        <label>Şifre</label>
+        <div class="input-wrap">
+          <span class="input-icon">🔒</span>
+          <input [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="En az 6 karakter" />
+          <button type="button" class="toggle-pw" (click)="showPassword = !showPassword">
+            {{ showPassword ? '🙈' : '👁️' }}
+          </button>
+        </div>
+        <span class="field-error" *ngIf="form.get('password')?.touched && form.get('password')?.invalid">En az 6 karakter</span>
+      </div>
+
+      <div class="error-banner" *ngIf="error">{{ error }}</div>
+
+      <button type="submit" class="btn-primary" [disabled]="loading">
+        <span *ngIf="!loading">Kayıt Ol</span>
+        <span *ngIf="loading" class="btn-spinner"></span>
+      </button>
+    </form>
+
+    <div class="divider"><span>zaten hesabın var mı?</span></div>
+    <p class="alt-link"><a routerLink="/login">Giriş Yap</a></p>
+  </div>
+</div>

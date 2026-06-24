@@ -1,0 +1,93 @@
+<div class="success-page">
+
+  <!-- Verifying (iyzico callback sonrası backend'den sonuç bekleniyor) -->
+  <div class="unlock-screen" *ngIf="state === 'verifying'">
+    <div class="unlock-anim">
+      <div class="lock-icon">🔒</div>
+      <div class="pulse-ring r1"></div>
+      <div class="pulse-ring r2"></div>
+    </div>
+    <h2>Ödeme Doğrulanıyor...</h2>
+    <p>Lütfen bekleyin</p>
+  </div>
+
+  <!-- Fail -->
+  <div class="feedback-screen fail" *ngIf="state === 'fail'">
+    <span class="fb-icon">❌</span>
+    <h2>Ödeme Başarısız</h2>
+    <p>{{ errorMessage }}</p>
+    <button class="btn-home" routerLink="/home">Ana Sayfaya Dön</button>
+  </div>
+
+  <!-- Error -->
+  <div class="feedback-screen error-s" *ngIf="state === 'error'">
+    <span class="fb-icon">⚠️</span>
+    <h2>Bir Hata Oluştu</h2>
+    <p>{{ errorMessage }}</p>
+    <button class="btn-home" routerLink="/home">Ana Sayfaya Dön</button>
+  </div>
+
+  <!-- Success -->
+  <div class="success-screen" *ngIf="state === 'success' && rental">
+
+    <div class="success-banner">
+      <div class="check-circle">✓</div>
+      <div>
+        <div class="banner-title">Ödeme Başarılı!</div>
+        <div class="banner-sub">Ref: {{ rental.paymentRef }}</div>
+      </div>
+    </div>
+
+    <div class="unlock-card">
+      <div class="unlock-left">
+        <div class="unlock-icon">🔓</div>
+        <div>
+          <div class="unlock-title">Kabin Açıldı</div>
+          <div class="unlock-sub">Kabin #{{ rental.cabinetNumber }} · SUP'unuzu alabilirsiniz</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="timer-card">
+      <div class="timer-top">
+        <span class="timer-label">Kalan Süre</span>
+        <span class="timer-end-label">Bitiş {{ endTimeFormatted }}</span>
+      </div>
+      <div class="timer-display">{{ timeDisplay }}</div>
+      <div class="progress-track">
+        <div class="progress-fill" [style.width.%]="progressPercent"></div>
+      </div>
+    </div>
+
+    <div class="details-card">
+      <div class="detail-row">
+        <span class="d-icon">🏄</span>
+        <span class="d-label">SUP</span>
+        <span class="d-val">{{ rental.qrCode }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="d-icon">⏱</span>
+        <span class="d-label">Süre</span>
+        <span class="d-val">{{ rental.durationMinutes }} dakika</span>
+      </div>
+      <div class="detail-row">
+        <span class="d-icon">🔒</span>
+        <span class="d-label">Kabin</span>
+        <span class="d-val">#{{ rental.cabinetNumber }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="d-icon">💰</span>
+        <span class="d-label">Ücret</span>
+        <span class="d-val">₺{{ rental.price }}</span>
+      </div>
+    </div>
+
+    <div class="info-note">
+      <span>ℹ️</span>
+      Süre bitiminde SUP'u kabin yanına bırakın. Kabin otomatik olarak kilitlenecektir.
+    </div>
+
+    <button class="btn-home" routerLink="/home">Ana Sayfaya Dön</button>
+  </div>
+
+</div>
