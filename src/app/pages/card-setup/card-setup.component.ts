@@ -5,12 +5,14 @@ import { CardService, CardInfo } from '../../services/card.service';
 import { MeterService } from '../../services/meter.service';
 import { AuthService } from '../../services/auth.service';
 import { TranslatePipe } from '@ngx-translate/core';
+import { PageLayoutComponent } from '../../components/page-layout/page-layout.component';
+import { BreadcrumbComponent } from '../../components/breadcrumb/breadcrumb.component';
 
 type PageState = 'loading' | 'has-card' | 'form' | 'success' | 'error';
 
 @Component({
     selector: 'app-card-setup',
-    imports: [NgIf, TranslatePipe],
+    imports: [NgIf, TranslatePipe, PageLayoutComponent, BreadcrumbComponent],
     templateUrl: './card-setup.component.html',
     styleUrls: ['./card-setup.component.scss']
 })

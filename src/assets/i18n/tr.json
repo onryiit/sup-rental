@@ -169,7 +169,17 @@
     "RENTAL_ACTIVE": "Aktif",
     "RENTAL_COMPLETED": "Tamamlandı",
     "RENTAL_PENDING_PAYMENT": "Ödeme Bekliyor",
-    "RENTAL_CANCELLED": "İptal"
+    "RENTAL_CANCELLED": "İptal",
+    "ADD_SUP": "SUP Ekle",
+    "SUP_NAME": "SUP Adı",
+    "BEACH": "Plaj",
+    "CABINET_NO": "Kabin Numarası",
+    "QR_PREVIEW": "Oluşturulacak QR Kodu",
+    "SAVE_SUP": "Kaydet",
+    "SUP_ADDED": "SUP başarıyla eklendi!",
+    "QR_READY": "QR Kod Hazır",
+    "QR_HINT": "Bu QR kodu yazdırıp kabinin üstüne yapıştırın.",
+    "PRINT_QR": "QR Yazdır"
   },
   "SUCCESS": {
     "TITLE": "Ödeme Başarılı!",
@@ -193,6 +203,8 @@
     "BACK": "Geri",
     "SAVE": "Kaydet",
     "CANCEL": "İptal",
+    "CLOSE": "Kapat",
+    "REQUIRED": "zorunludur",
     "CONFIRM": "Onayla",
     "YES": "Evet",
     "NO": "Hayır",

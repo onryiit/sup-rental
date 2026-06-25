@@ -169,7 +169,17 @@
     "RENTAL_ACTIVE": "Active",
     "RENTAL_COMPLETED": "Completed",
     "RENTAL_PENDING_PAYMENT": "Pending Payment",
-    "RENTAL_CANCELLED": "Cancelled"
+    "RENTAL_CANCELLED": "Cancelled",
+    "ADD_SUP": "Add SUP",
+    "SUP_NAME": "SUP Name",
+    "BEACH": "Beach",
+    "CABINET_NO": "Cabinet Number",
+    "QR_PREVIEW": "Generated QR Code",
+    "SAVE_SUP": "Save",
+    "SUP_ADDED": "SUP added successfully!",
+    "QR_READY": "QR Code Ready",
+    "QR_HINT": "Print this QR code and stick it on top of the cabinet.",
+    "PRINT_QR": "Print QR"
   },
   "SUCCESS": {
     "TITLE": "Payment Successful!",
@@ -193,6 +203,8 @@
     "BACK": "Back",
     "SAVE": "Save",
     "CANCEL": "Cancel",
+    "CLOSE": "Close",
+    "REQUIRED": "is required",
     "CONFIRM": "Confirm",
     "YES": "Yes",
     "NO": "No",

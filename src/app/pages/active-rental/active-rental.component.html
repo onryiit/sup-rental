@@ -1,94 +1,90 @@
-<div class="meter-page">
+<app-page-layout icon="surfing" title="{{ 'ACTIVE.TITLE' | translate }}">
 
-  <!-- Loading -->
-  <div class="state-screen" *ngIf="state === 'loading'">
-    <div class="wave-spinner"><div></div><div></div><div></div></div>
-    <p>{{ 'COMMON.LOADING' | translate }}</p>
-  </div>
+  <app-breadcrumb pageToolbar [items]="[
+    { label: 'NAV.HOME', translate: true, url: '/home' },
+    { label: 'NAV.RENTAL', translate: true }
+  ]"></app-breadcrumb>
 
-  <!-- No rental -->
-  <div class="state-screen" *ngIf="state === 'no-rental'">
-    <span class="empty-icon">🏖️</span>
-    <h2>{{ 'ACTIVE.NO_RENTAL' | translate }}</h2>
-    <p>{{ 'ACTIVE.NO_RENTAL_DESC' | translate }}</p>
-    <button class="btn-primary" routerLink="/home">{{ 'ACTIVE.GO_HOME' | translate }}</button>
-  </div>
+  <div class="meter-inner">
 
-  <!-- Active Rental -->
-  <div class="active-screen" *ngIf="state === 'active' && status">
-
-    <!-- Top bar -->
-    <div class="top-bar">
-      <div class="sup-badge">🏄 {{ 'ACTIVE.TITLE' | translate }}</div>
-      <div class="rental-id">{{ status.rentalId }}</div>
+    <!-- Loading -->
+    <div class="state-screen" *ngIf="state === 'loading'">
+      <div class="wave-spinner"><div></div><div></div><div></div></div>
+      <p>{{ 'COMMON.LOADING' | translate }}</p>
     </div>
 
-    <!-- Overdue warning -->
-    <div class="overdue-banner" *ngIf="status.isOverdue">
-      ⚠️ {{ 'ACTIVE.OVERDUE_MSG' | translate:{ amount: status.preAuthAmount } }}
+    <!-- No rental -->
+    <div class="state-screen" *ngIf="state === 'no-rental'">
+      <span class="empty-icon">🏖️</span>
+      <h2>{{ 'ACTIVE.NO_RENTAL' | translate }}</h2>
+      <p>{{ 'ACTIVE.NO_RENTAL_DESC' | translate }}</p>
+      <button class="btn-primary" routerLink="/home">{{ 'ACTIVE.GO_HOME' | translate }}</button>
     </div>
 
-    <!-- Live cost meter -->
-    <div class="meter-card">
-      <div class="meter-label">{{ 'ACTIVE.ESTIMATED' | translate }}</div>
-      <div class="meter-amount">₺{{ status.estimatedPrice | number:'1.2-2' }}</div>
-      <div class="meter-sub">{{ status.pricePerMinute }} ₺ / {{ 'ACTIVE.MIN' | translate }}</div>
+    <!-- Active Rental -->
+    <div class="active-screen" *ngIf="state === 'active' && status">
 
-      <div class="progress-wrap">
-        <div class="progress-bar">
-          <div class="progress-fill"
-               [style.width.%]="progressPercent"
-               [style.background]="progressColor"></div>
+      <div class="rental-id-badge">{{ status.rentalId }}</div>
+
+      <!-- Overdue warning -->
+      <div class="overdue-banner" *ngIf="status.isOverdue">
+        ⚠️ {{ 'ACTIVE.OVERDUE_MSG' | translate:{ amount: status.preAuthAmount } }}
+      </div>
+
+      <!-- Live cost meter -->
+      <div class="meter-card">
+        <div class="meter-label">{{ 'ACTIVE.ESTIMATED' | translate }}</div>
+        <div class="meter-amount">₺{{ status.estimatedPrice | number:'1.2-2' }}</div>
+        <div class="meter-sub">{{ status.pricePerMinute }} ₺ / {{ 'ACTIVE.MIN' | translate }}</div>
+
+        <div class="progress-wrap">
+          <div class="progress-bar">
+            <div class="progress-fill"
+                 [style.width.%]="progressPercent"
+                 [style.background]="progressColor"></div>
+          </div>
+          <div class="progress-labels">
+            <span>{{ elapsedDisplay }}</span>
+            <span>{{ 'ACTIVE.MAX' | translate }} {{ status.maxMinutes / 60 | number:'1.0-0' }} {{ 'ACTIVE.HOUR' | translate }}</span>
+          </div>
         </div>
-        <div class="progress-labels">
-          <span>{{ elapsedDisplay }}</span>
-          <span>{{ 'ACTIVE.MAX' | translate }} {{ status.maxMinutes / 60 | number:'1.0-0' }} {{ 'ACTIVE.HOUR' | translate }}</span>
+      </div>
+
+      <!-- Pre-auth info -->
+      <div class="preauth-card">
+        <div class="pa-row">
+          <span class="pa-icon">🔒</span>
+          <div>
+            <div class="pa-title">{{ 'ACTIVE.PREAUTH_TITLE' | translate }}</div>
+            <div class="pa-sub">{{ 'ACTIVE.PREAUTH_SUB' | translate }}</div>
+          </div>
+          <div class="pa-amount">₺{{ status.preAuthAmount }}</div>
         </div>
       </div>
-    </div>
 
-    <!-- Pre-auth info -->
-    <div class="preauth-card">
-      <div class="pa-row">
-        <span class="pa-icon">🔒</span>
-        <div>
-          <div class="pa-title">{{ 'ACTIVE.PREAUTH_TITLE' | translate }}</div>
-          <div class="pa-sub">{{ 'ACTIVE.PREAUTH_SUB' | translate }}</div>
+      <!-- Info rows -->
+      <div class="info-card">
+        <div class="info-row">
+          <span>⏱</span><span>{{ 'ACTIVE.ELAPSED' | translate }}</span><strong>{{ elapsedDisplay }}</strong>
         </div>
-        <div class="pa-amount">₺{{ status.preAuthAmount }}</div>
+        <div class="info-row">
+          <span>💰</span><span>{{ 'ACTIVE.ESTIMATED' | translate }}</span><strong>₺{{ status.estimatedPrice | number:'1.2-2' }}</strong>
+        </div>
+        <div class="info-row">
+          <span>🔒</span><span>{{ 'ACTIVE.PREAUTH_TITLE' | translate }}</span><strong>₺{{ status.preAuthAmount }}</strong>
+        </div>
       </div>
+
+      <!-- Return steps -->
+      <div class="return-box">
+        <div class="return-title">{{ 'ACTIVE.RETURN_TITLE' | translate }}</div>
+        <div class="return-step"><span class="rs-num">1</span><span>{{ 'ACTIVE.RETURN_STEP1' | translate }}</span></div>
+        <div class="return-step"><span class="rs-num">2</span><span>{{ 'ACTIVE.RETURN_STEP2' | translate }}</span></div>
+        <div class="return-step"><span class="rs-num">3</span><span>{{ 'ACTIVE.RETURN_STEP3' | translate }}</span></div>
+      </div>
+
+      <button class="btn-home" (click)="goHome()">{{ 'ACTIVE.GO_HOME' | translate }}</button>
     </div>
 
-    <!-- Info -->
-    <div class="info-card">
-      <div class="info-row">
-        <span>⏱</span><span>{{ 'ACTIVE.ELAPSED' | translate }}</span><strong>{{ elapsedDisplay }}</strong>
-      </div>
-      <div class="info-row">
-        <span>💰</span><span>{{ 'ACTIVE.ESTIMATED' | translate }}</span><strong>₺{{ status.estimatedPrice | number:'1.2-2' }}</strong>
-      </div>
-      <div class="info-row">
-        <span>🔒</span><span>{{ 'ACTIVE.PREAUTH_TITLE' | translate }}</span><strong>₺{{ status.preAuthAmount }}</strong>
-      </div>
-    </div>
-
-    <!-- Return instruction -->
-    <div class="return-box">
-      <div class="return-title">{{ 'ACTIVE.RETURN_TITLE' | translate }}</div>
-      <div class="return-step">
-        <span class="rs-num">1</span>
-        <span>{{ 'ACTIVE.RETURN_STEP1' | translate }}</span>
-      </div>
-      <div class="return-step">
-        <span class="rs-num">2</span>
-        <span>{{ 'ACTIVE.RETURN_STEP2' | translate }}</span>
-      </div>
-      <div class="return-step">
-        <span class="rs-num">3</span>
-        <span>{{ 'ACTIVE.RETURN_STEP3' | translate }}</span>
-      </div>
-    </div>
-
-    <button class="btn-home" (click)="goHome()">{{ 'ACTIVE.GO_HOME' | translate }}</button>
   </div>
-</div>
+</app-page-layout>

@@ -1,0 +1,20 @@
+<nav class="breadcrumb">
+  <ng-container *ngFor="let item of items; let last = last">
+
+    <!-- Clickable crumb (has url and is not the last item) -->
+    <a *ngIf="item.url && !last" [routerLink]="item.url" class="breadcrumb-link">
+      {{ item.translate ? (item.label | translate) : item.label }}
+    </a>
+
+    <!-- Active crumb (last item — not a link) -->
+    <span *ngIf="!item.url || last" class="breadcrumb-active">
+      {{ item.translate ? (item.label | translate) : item.label }}
+    </span>
+
+    <!-- Separator -->
+    <span *ngIf="!last" class="breadcrumb-sep">
+      <span class="material-symbols-outlined">chevron_right</span>
+    </span>
+
+  </ng-container>
+</nav>

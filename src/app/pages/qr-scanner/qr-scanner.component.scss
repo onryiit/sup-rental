@@ -1,10 +1,10 @@
-.scanner-page {
-  min-height: 100vh;
+.scanner-inner {
   background: #0a0e1a;
+  color: white;
+  font-family: 'Segoe UI', sans-serif;
+  min-height: 500px;
   display: flex;
   flex-direction: column;
-  font-family: 'Segoe UI', sans-serif;
-  color: white;
 }
 
 /* ── Header ── */

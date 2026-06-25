@@ -5,12 +5,13 @@ import { RentalService } from '../../services/rental.service';
 import { IotService } from '../../services/iot.service';
 import { Sup, Beach, Rental } from '../../models';
 import { TranslatePipe } from '@ngx-translate/core';
+import { PageLayoutComponent } from '../../components/page-layout/page-layout.component';
 
 type Tab = 'dashboard' | 'sups' | 'rentals';
 
 @Component({
     selector: 'app-admin',
-    imports: [NgIf, NgFor, TranslatePipe],
+    imports: [NgIf, NgFor, TranslatePipe, PageLayoutComponent],
     templateUrl: './admin.component.html',
     styleUrls: ['./admin.component.scss']
 })

@@ -1,56 +1,57 @@
-<div class="scanner-page">
+<app-page-layout icon="qr_code_scanner" title="{{ 'SCAN.TITLE' | translate }}">
 
-  <!-- Header -->
-  <div class="scanner-header">
-    <button class="back-btn" (click)="goBack()">← {{ 'COMMON.BACK' | translate }}</button>
-    <span class="title">{{ 'SCAN.TITLE' | translate }}</span>
-    <span></span>
-  </div>
+  <app-breadcrumb pageToolbar [items]="[
+    { label: 'NAV.HOME', translate: true, url: '/home' },
+    { label: 'NAV.SCAN', translate: true }
+  ]"></app-breadcrumb>
 
-  <!-- Camera View -->
-  <div class="camera-area" *ngIf="state === 'scanning' || state === 'idle'">
-    <div id="qr-reader" class="qr-reader"></div>
-    <div class="scan-overlay">
-      <div class="scan-corner tl"></div>
-      <div class="scan-corner tr"></div>
-      <div class="scan-corner bl"></div>
-      <div class="scan-corner br"></div>
-      <div class="scan-line"></div>
+  <div class="scanner-inner">
+
+    <!-- Camera view -->
+    <div class="camera-area" *ngIf="state === 'scanning' || state === 'idle'">
+      <div id="qr-reader" class="qr-reader"></div>
+      <div class="scan-overlay">
+        <div class="scan-corner tl"></div>
+        <div class="scan-corner tr"></div>
+        <div class="scan-corner bl"></div>
+        <div class="scan-corner br"></div>
+        <div class="scan-line"></div>
+      </div>
+      <p class="scan-hint">{{ 'SCAN.HINT' | translate }}</p>
     </div>
-    <p class="scan-hint">{{ 'SCAN.HINT' | translate }}</p>
-  </div>
 
-  <!-- Found -->
-  <div class="feedback-card success" *ngIf="state === 'found'">
-    <div class="fb-icon">✅</div>
-    <h2>{{ 'SCAN.FOUND_TITLE' | translate }}</h2>
-    <p>{{ 'SCAN.FOUND_SUB' | translate }}</p>
-    <code>{{ scannedCode }}</code>
-  </div>
-
-  <!-- Camera denied -->
-  <div class="feedback-card warn" *ngIf="state === 'denied'">
-    <div class="fb-icon">📵</div>
-    <h2>{{ 'SCAN.DENIED_TITLE' | translate }}</h2>
-    <p>{{ errorMessage }}</p>
-  </div>
-
-  <!-- Camera error -->
-  <div class="feedback-card error" *ngIf="state === 'error'">
-    <div class="fb-icon">⚠️</div>
-    <h2>{{ 'SCAN.ERROR_TITLE' | translate }}</h2>
-    <p>{{ errorMessage }}</p>
-    <button class="btn-retry" (click)="startScan()">{{ 'SCAN.RETRY' | translate }}</button>
-  </div>
-
-  <!-- Manual code entry (fallback) -->
-  <div class="manual-section" *ngIf="state !== 'found'">
-    <div class="divider-or"><span>{{ 'SCAN.OR_MANUAL' | translate }}</span></div>
-    <div class="manual-row">
-      <input #manualInput type="text" placeholder="QR-OLUD-001" class="manual-input" />
-      <button class="btn-manual" (click)="enterManual(manualInput.value)">{{ 'SCAN.MANUAL_BTN' | translate }} →</button>
+    <!-- Found -->
+    <div class="feedback-card success" *ngIf="state === 'found'">
+      <div class="fb-icon">✅</div>
+      <h2>{{ 'SCAN.FOUND_TITLE' | translate }}</h2>
+      <p>{{ 'SCAN.FOUND_SUB' | translate }}</p>
+      <code>{{ scannedCode }}</code>
     </div>
-    <p class="manual-hint">{{ 'SCAN.MANUAL_HINT' | translate }} <strong>QR-OLUD-001</strong></p>
-  </div>
 
-</div>
+    <!-- Camera denied -->
+    <div class="feedback-card warn" *ngIf="state === 'denied'">
+      <div class="fb-icon">📵</div>
+      <h2>{{ 'SCAN.DENIED_TITLE' | translate }}</h2>
+      <p>{{ errorMessage }}</p>
+    </div>
+
+    <!-- Camera error -->
+    <div class="feedback-card error" *ngIf="state === 'error'">
+      <div class="fb-icon">⚠️</div>
+      <h2>{{ 'SCAN.ERROR_TITLE' | translate }}</h2>
+      <p>{{ errorMessage }}</p>
+      <button class="btn-retry" (click)="startScan()">{{ 'SCAN.RETRY' | translate }}</button>
+    </div>
+
+    <!-- Manual entry fallback -->
+    <div class="manual-section" *ngIf="state !== 'found'">
+      <div class="divider-or"><span>{{ 'SCAN.OR_MANUAL' | translate }}</span></div>
+      <div class="manual-row">
+        <input #manualInput type="text" placeholder="QR-OLUD-001" class="manual-input" />
+        <button class="btn-manual" (click)="enterManual(manualInput.value)">{{ 'SCAN.MANUAL_BTN' | translate }} →</button>
+      </div>
+      <p class="manual-hint">{{ 'SCAN.MANUAL_HINT' | translate }} <strong>QR-OLUD-001</strong></p>
+    </div>
+
+  </div>
+</app-page-layout>

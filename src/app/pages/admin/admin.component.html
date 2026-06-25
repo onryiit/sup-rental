@@ -1,134 +1,150 @@
-<div class="admin-page">
-  <div class="sidebar">
-    <div class="brand">🌊 Aqua SUP Admin</div>
-    <nav>
-      <button [class.active]="activeTab==='dashboard'" (click)="setTab('dashboard')">📊 {{ 'ADMIN.TAB_DASHBOARD' | translate }}</button>
-      <button [class.active]="activeTab==='sups'" (click)="setTab('sups')">🏄 {{ 'ADMIN.TAB_SUPS' | translate }}</button>
-      <button [class.active]="activeTab==='rentals'" (click)="setTab('rentals')">📋 {{ 'ADMIN.TAB_RENTALS' | translate }}</button>
-    </nav>
+<app-page-layout icon="admin_panel_settings" title="{{ 'ADMIN.TITLE' | translate }}">
+
+  <!-- Aksiyon alanı: tab butonları sağ üstte -->
+  <div pageActions class="tab-group">
+    <button [class.active]="activeTab==='dashboard'" (click)="setTab('dashboard')">
+      <span class="material-symbols-outlined">dashboard</span>
+      {{ 'ADMIN.TAB_DASHBOARD' | translate }}
+    </button>
+    <button [class.active]="activeTab==='sups'" (click)="setTab('sups')">
+      <span class="material-symbols-outlined">surfing</span>
+      {{ 'ADMIN.TAB_SUPS' | translate }}
+    </button>
+    <button [class.active]="activeTab==='rentals'" (click)="setTab('rentals')">
+      <span class="material-symbols-outlined">receipt_long</span>
+      {{ 'ADMIN.TAB_RENTALS' | translate }}
+    </button>
   </div>
 
-  <div class="main">
-    <!-- DASHBOARD -->
-    <div *ngIf="activeTab==='dashboard'">
-      <h1>{{ 'ADMIN.TAB_DASHBOARD' | translate }}</h1>
-      <div class="stats-grid">
-        <div class="stat-card green">
-          <div class="stat-value">{{ availableCount }}</div>
-          <div class="stat-label">{{ 'ADMIN.STATUS_AVAILABLE' | translate }} SUP</div>
-        </div>
-        <div class="stat-card blue">
-          <div class="stat-value">{{ rentedCount }}</div>
-          <div class="stat-label">{{ 'ADMIN.STATUS_RENTED' | translate }} SUP</div>
-        </div>
-        <div class="stat-card orange">
-          <div class="stat-value">{{ activeRentals.length }}</div>
-          <div class="stat-label">{{ 'ADMIN.ACTIVE_RENTALS' | translate }}</div>
-        </div>
-        <div class="stat-card purple">
-          <div class="stat-value">₺{{ todayRevenue }}</div>
-          <div class="stat-label">{{ 'ADMIN.REVENUE' | translate }}</div>
-        </div>
-      </div>
+  <!-- ── DASHBOARD ── -->
+  <div *ngIf="activeTab==='dashboard'" class="tab-content">
 
-      <h2>{{ 'ADMIN.ACTIVE_RENTALS' | translate }}</h2>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>{{ 'ADMIN.COL_RENTAL_ID' | translate }}</th>
-              <th>{{ 'ADMIN.COL_QR' | translate }}</th>
-              <th>{{ 'ADMIN.COL_BEACH' | translate }}</th>
-              <th>{{ 'ADMIN.COL_CABINET' | translate }}</th>
-              <th>{{ 'ADMIN.COL_DURATION' | translate }}</th>
-              <th>{{ 'ADMIN.COL_AMOUNT' | translate }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let r of activeRentals">
-              <td><code>{{ r.id }}</code></td>
-              <td>{{ r.qrCode }}</td>
-              <td>{{ getBeachName(r.beachId) }}</td>
-              <td>#{{ r.cabinetNumber }}</td>
-              <td>{{ r.durationMinutes }} {{ 'ACTIVE.MIN' | translate }}</td>
-              <td><strong>₺{{ r.price }}</strong></td>
-            </tr>
-            <tr *ngIf="activeRentals.length === 0">
-              <td colspan="6" class="empty">{{ 'ADMIN.NO_ACTIVE' | translate }}</td>
-            </tr>
-          </tbody>
-        </table>
+    <div class="stats-grid">
+      <div class="stat-card green">
+        <span class="material-symbols-outlined stat-icon">check_circle</span>
+        <div class="stat-value">{{ availableCount }}</div>
+        <div class="stat-label">{{ 'ADMIN.STATUS_AVAILABLE' | translate }} SUP</div>
+      </div>
+      <div class="stat-card blue">
+        <span class="material-symbols-outlined stat-icon">surfing</span>
+        <div class="stat-value">{{ rentedCount }}</div>
+        <div class="stat-label">{{ 'ADMIN.STATUS_RENTED' | translate }} SUP</div>
+      </div>
+      <div class="stat-card orange">
+        <span class="material-symbols-outlined stat-icon">pending</span>
+        <div class="stat-value">{{ activeRentals.length }}</div>
+        <div class="stat-label">{{ 'ADMIN.ACTIVE_RENTALS' | translate }}</div>
+      </div>
+      <div class="stat-card purple">
+        <span class="material-symbols-outlined stat-icon">payments</span>
+        <div class="stat-value">₺{{ todayRevenue }}</div>
+        <div class="stat-label">{{ 'ADMIN.REVENUE' | translate }}</div>
       </div>
     </div>
 
-    <!-- SUPS -->
-    <div *ngIf="activeTab==='sups'">
-      <h1>{{ 'ADMIN.TAB_SUPS' | translate }}</h1>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>{{ 'ADMIN.COL_NAME' | translate }}</th>
-              <th>{{ 'ADMIN.COL_QR' | translate }}</th>
-              <th>{{ 'ADMIN.COL_BEACH' | translate }}</th>
-              <th>{{ 'ADMIN.COL_CABINET' | translate }}</th>
-              <th>{{ 'ADMIN.COL_STATUS' | translate }}</th>
-              <th>{{ 'ADMIN.COL_ACTION' | translate }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let s of sups">
-              <td>{{ s.name }}</td>
-              <td><code>{{ s.qrCode }}</code></td>
-              <td>{{ getBeachName(s.beachId) }}</td>
-              <td>#{{ s.cabinetNumber }}</td>
-              <td>
-                <span class="badge" [class]="'badge-' + s.status">
-                  {{ ('ADMIN.STATUS_' + s.status.toUpperCase()) | translate }}
-                </span>
-              </td>
-              <td>
-                <button class="btn-sm" (click)="unlockManual(s)">🔓 {{ 'ADMIN.UNLOCK' | translate }}</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+    <div class="section-title">
+      <span class="material-symbols-outlined">bolt</span>
+      {{ 'ADMIN.ACTIVE_RENTALS' | translate }}
     </div>
 
-    <!-- RENTALS -->
-    <div *ngIf="activeTab==='rentals'">
-      <h1>{{ 'ADMIN.TAB_RENTALS' | translate }}</h1>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>{{ 'ADMIN.COL_QR' | translate }}</th>
-              <th>{{ 'ADMIN.COL_PHONE' | translate }}</th>
-              <th>{{ 'ADMIN.COL_DURATION' | translate }}</th>
-              <th>{{ 'ADMIN.COL_AMOUNT' | translate }}</th>
-              <th>{{ 'ADMIN.COL_PAYMENT_REF' | translate }}</th>
-              <th>{{ 'ADMIN.COL_STATUS' | translate }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let r of rentals">
-              <td><code>{{ r.id }}</code></td>
-              <td>{{ r.qrCode }}</td>
-              <td>{{ r.phoneNumber }}</td>
-              <td>{{ r.durationMinutes }} {{ 'ACTIVE.MIN' | translate }}</td>
-              <td><strong>₺{{ r.price }}</strong></td>
-              <td><code>{{ r.paymentRef }}</code></td>
-              <td>
-                <span class="badge" [class]="'badge-' + r.status">
-                  {{ ('ADMIN.RENTAL_' + r.status.toUpperCase()) | translate }}
-                </span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>{{ 'ADMIN.COL_RENTAL_ID' | translate }}</th>
+            <th>{{ 'ADMIN.COL_QR' | translate }}</th>
+            <th>{{ 'ADMIN.COL_BEACH' | translate }}</th>
+            <th>{{ 'ADMIN.COL_CABINET' | translate }}</th>
+            <th>{{ 'ADMIN.COL_DURATION' | translate }}</th>
+            <th>{{ 'ADMIN.COL_AMOUNT' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let r of activeRentals">
+            <td><code>{{ r.id }}</code></td>
+            <td>{{ r.qrCode }}</td>
+            <td>{{ getBeachName(r.beachId) }}</td>
+            <td>#{{ r.cabinetNumber }}</td>
+            <td>{{ r.durationMinutes }} {{ 'ACTIVE.MIN' | translate }}</td>
+            <td><strong>₺{{ r.price }}</strong></td>
+          </tr>
+          <tr *ngIf="activeRentals.length === 0">
+            <td colspan="6" class="empty-row">{{ 'ADMIN.NO_ACTIVE' | translate }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
-</div>
+
+  <!-- ── SUP'LAR ── -->
+  <div *ngIf="activeTab==='sups'" class="tab-content">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>{{ 'ADMIN.COL_NAME' | translate }}</th>
+            <th>{{ 'ADMIN.COL_QR' | translate }}</th>
+            <th>{{ 'ADMIN.COL_BEACH' | translate }}</th>
+            <th>{{ 'ADMIN.COL_CABINET' | translate }}</th>
+            <th>{{ 'ADMIN.COL_STATUS' | translate }}</th>
+            <th>{{ 'ADMIN.COL_ACTION' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let s of sups">
+            <td><strong>{{ s.name }}</strong></td>
+            <td><code>{{ s.qrCode }}</code></td>
+            <td>{{ getBeachName(s.beachId) }}</td>
+            <td>#{{ s.cabinetNumber }}</td>
+            <td>
+              <span class="badge" [class]="'badge-' + s.status">
+                {{ ('ADMIN.STATUS_' + s.status.toUpperCase()) | translate }}
+              </span>
+            </td>
+            <td>
+              <button class="btn-action" (click)="unlockManual(s)">
+                <span class="material-symbols-outlined">lock_open</span>
+                {{ 'ADMIN.UNLOCK' | translate }}
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── KİRALAMALAR ── -->
+  <div *ngIf="activeTab==='rentals'" class="tab-content">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>{{ 'ADMIN.COL_QR' | translate }}</th>
+            <th>{{ 'ADMIN.COL_PHONE' | translate }}</th>
+            <th>{{ 'ADMIN.COL_DURATION' | translate }}</th>
+            <th>{{ 'ADMIN.COL_AMOUNT' | translate }}</th>
+            <th>{{ 'ADMIN.COL_PAYMENT_REF' | translate }}</th>
+            <th>{{ 'ADMIN.COL_STATUS' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let r of rentals">
+            <td><code>{{ r.id }}</code></td>
+            <td>{{ r.qrCode }}</td>
+            <td>{{ r.phoneNumber }}</td>
+            <td>{{ r.durationMinutes }} {{ 'ACTIVE.MIN' | translate }}</td>
+            <td><strong>₺{{ r.price }}</strong></td>
+            <td><code>{{ r.paymentRef }}</code></td>
+            <td>
+              <span class="badge" [class]="'badge-' + r.status">
+                {{ ('ADMIN.RENTAL_' + r.status.toUpperCase()) | translate }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</app-page-layout>

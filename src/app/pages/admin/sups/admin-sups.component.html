@@ -1,0 +1,55 @@
+<app-page-layout icon="surfing" title="{{ 'ADMIN.TAB_SUPS' | translate }}">
+
+  <app-breadcrumb pageToolbar [items]="[
+    { label: 'NAV.HOME', translate: true, url: '/home' },
+    { label: 'NAV.ADMIN', translate: true },
+    { label: 'ADMIN.TAB_SUPS', translate: true }
+  ]"></app-breadcrumb>
+
+  <!-- Add SUP button shown in the header right side -->
+  <div pageActions>
+    <button class="btn-add-sup" (click)="openAddSupDialog()">
+      <span class="material-symbols-outlined">add</span>
+      {{ 'ADMIN.ADD_SUP' | translate }}
+    </button>
+  </div>
+
+  <div class="page-inner">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>{{ 'ADMIN.COL_NAME' | translate }}</th>
+            <th>{{ 'ADMIN.COL_QR' | translate }}</th>
+            <th>{{ 'ADMIN.COL_BEACH' | translate }}</th>
+            <th>{{ 'ADMIN.COL_CABINET' | translate }}</th>
+            <th>{{ 'ADMIN.COL_STATUS' | translate }}</th>
+            <th>{{ 'ADMIN.COL_ACTION' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let s of sups">
+            <td><strong>{{ s.name }}</strong></td>
+            <td><code>{{ s.qrCode }}</code></td>
+            <td>{{ getBeachName(s.beachId) }}</td>
+            <td>#{{ s.cabinetNumber }}</td>
+            <td>
+              <span class="badge" [class]="'badge-' + s.status">
+                {{ ('ADMIN.STATUS_' + s.status.toUpperCase()) | translate }}
+              </span>
+            </td>
+            <td>
+              <button class="btn-action" (click)="unlockManual(s)">
+                <span class="material-symbols-outlined">lock_open</span>
+                {{ 'ADMIN.UNLOCK' | translate }}
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="sups.length === 0">
+            <td colspan="6" class="empty-row">{{ 'ADMIN.NO_ACTIVE' | translate }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</app-page-layout>

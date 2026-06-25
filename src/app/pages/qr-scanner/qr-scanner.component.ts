@@ -3,12 +3,14 @@ import { Router } from '@angular/router';
 import { NgIf } from '@angular/common';
 import { Html5Qrcode } from 'html5-qrcode';
 import { TranslatePipe } from '@ngx-translate/core';
+import { PageLayoutComponent } from '../../components/page-layout/page-layout.component';
+import { BreadcrumbComponent } from '../../components/breadcrumb/breadcrumb.component';
 
 type ScanState = 'idle' | 'scanning' | 'found' | 'error' | 'denied';
 
 @Component({
     selector: 'app-qr-scanner',
-    imports: [NgIf, TranslatePipe],
+    imports: [NgIf, TranslatePipe, PageLayoutComponent, BreadcrumbComponent],
     templateUrl: './qr-scanner.component.html',
     styleUrls: ['./qr-scanner.component.scss']
 })

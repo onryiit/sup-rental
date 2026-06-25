@@ -55,4 +55,11 @@ export class SupService {
   getRentalDurations(): RentalDuration[] {
     return RENTAL_DURATIONS;
   }
+
+  createSup(sup: Omit<Sup, 'id'>): Observable<Sup> {
+    // TODO: return this.http.post<Sup>(`${this.apiUrl}/sups`, sup);
+    const newSup: Sup = { ...sup, id: `sup-${Date.now()}` };
+    MOCK_SUPS.push(newSup);
+    return of(newSup);
+  }
 }

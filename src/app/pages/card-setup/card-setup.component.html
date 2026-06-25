@@ -1,92 +1,80 @@
-<div class="card-page">
-  <div class="page-header">
-    <button class="back-btn" (click)="goHome()">← {{ 'COMMON.BACK' | translate }}</button>
-    <span class="header-title">{{ 'CARD.TITLE' | translate }}</span>
-    <span></span>
-  </div>
+<app-page-layout icon="credit_card" title="{{ 'CARD.TITLE' | translate }}">
 
-  <!-- Loading -->
-  <div class="state-screen" *ngIf="state === 'loading'">
-    <div class="wave-spinner"><div></div><div></div><div></div></div>
-    <p>{{ 'COMMON.LOADING' | translate }}</p>
-  </div>
+  <app-breadcrumb pageToolbar [items]="[
+    { label: 'NAV.HOME', translate: true, url: '/home' },
+    { label: 'NAV.CARD', translate: true }
+  ]"></app-breadcrumb>
 
-  <!-- Has card -->
-  <div class="content" *ngIf="state === 'has-card' && cardInfo">
-    <div class="card-visual">
-      <div class="card-chip">▬▬</div>
-      <div class="card-number">•••• •••• •••• {{ cardInfo.lastFourDigits }}</div>
-      <div class="card-footer">
-        <span>{{ cardInfo.cardAlias }}</span>
-        <span>{{ 'CARD.REGISTERED' | translate }}</span>
-      </div>
+  <div class="card-inner">
+
+    <!-- Loading -->
+    <div class="state-screen" *ngIf="state === 'loading'">
+      <div class="wave-spinner"><div></div><div></div><div></div></div>
+      <p>{{ 'COMMON.LOADING' | translate }}</p>
     </div>
 
-    <div class="info-box">
-      <span>✅</span>
-      <div>
-        <strong>{{ 'CARD.HAS_CARD' | translate }}</strong>
-        <p>{{ 'CARD.HAS_CARD_DESC' | translate }}</p>
+    <!-- Has card -->
+    <div class="content" *ngIf="state === 'has-card' && cardInfo">
+      <div class="card-visual">
+        <div class="card-chip">▬▬</div>
+        <div class="card-number">•••• •••• •••• {{ cardInfo.lastFourDigits }}</div>
+        <div class="card-footer">
+          <span>{{ cardInfo.cardAlias }}</span>
+          <span>{{ 'CARD.REGISTERED' | translate }}</span>
+        </div>
       </div>
+
+      <div class="info-box">
+        <span>✅</span>
+        <div>
+          <strong>{{ 'CARD.HAS_CARD' | translate }}</strong>
+          <p>{{ 'CARD.HAS_CARD_DESC' | translate }}</p>
+        </div>
+      </div>
+
+      <div class="meter-explainer">
+        <h3>{{ 'CARD.HOW_TITLE' | translate }}</h3>
+        <div class="step-row"><span class="step-icon">🔓</span><div><strong>{{ 'CARD.STEP1_TITLE' | translate }}</strong><p>{{ 'CARD.STEP1_DESC' | translate }}</p></div></div>
+        <div class="step-row"><span class="step-icon">⏱</span><div><strong>{{ 'CARD.STEP2_TITLE' | translate }}</strong><p>{{ 'CARD.STEP2_DESC' | translate }}</p></div></div>
+        <div class="step-row"><span class="step-icon">🔒</span><div><strong>{{ 'CARD.STEP3_TITLE' | translate }}</strong><p>{{ 'CARD.STEP3_DESC' | translate }}</p></div></div>
+        <div class="step-row warning"><span class="step-icon">⚠️</span><div><strong>{{ 'CARD.STEP4_TITLE' | translate }}</strong><p>{{ 'CARD.STEP4_DESC' | translate }}</p></div></div>
+      </div>
+
+      <button class="btn-delete" (click)="deleteCard()">{{ 'CARD.DELETE' | translate }}</button>
     </div>
 
-    <div class="meter-explainer">
-      <h3>{{ 'CARD.HOW_TITLE' | translate }}</h3>
-      <div class="step-row">
-        <span class="step-icon">🔓</span>
-        <div><strong>{{ 'CARD.STEP1_TITLE' | translate }}</strong><p>{{ 'CARD.STEP1_DESC' | translate }}</p></div>
+    <!-- Card save form -->
+    <div class="content" *ngIf="state === 'form'">
+      <div class="form-info">
+        <div class="form-info-icon">💳</div>
+        <h2>{{ 'CARD.ADD_TITLE' | translate }}</h2>
+        <p>{{ 'CARD.ADD_DESC' | translate }}</p>
       </div>
-      <div class="step-row">
-        <span class="step-icon">⏱</span>
-        <div><strong>{{ 'CARD.STEP2_TITLE' | translate }}</strong><p>{{ 'CARD.STEP2_DESC' | translate }}</p></div>
+      <div class="iyzico-wrapper">
+        <div #iyzicoContainer id="iyzipay-checkout-form" class="responsive"></div>
       </div>
-      <div class="step-row">
-        <span class="step-icon">🔒</span>
-        <div><strong>{{ 'CARD.STEP3_TITLE' | translate }}</strong><p>{{ 'CARD.STEP3_DESC' | translate }}</p></div>
+      <div class="dev-box">
+        <p>🛠 <strong>{{ 'CARD.DEV_MODE' | translate }}</strong></p>
+        <button class="btn-dev" (click)="devInjectCard()">{{ 'CARD.DEV_INJECT' | translate }}</button>
       </div>
-      <div class="step-row warning">
-        <span class="step-icon">⚠️</span>
-        <div><strong>{{ 'CARD.STEP4_TITLE' | translate }}</strong><p>{{ 'CARD.STEP4_DESC' | translate }}</p></div>
-      </div>
+      <p class="secure-note">🔒 {{ 'CARD.SECURE_NOTE' | translate }}</p>
     </div>
 
-    <button class="btn-delete" (click)="deleteCard()">{{ 'CARD.DELETE' | translate }}</button>
+    <!-- Success -->
+    <div class="state-screen success" *ngIf="state === 'success'">
+      <div class="success-icon">✅</div>
+      <h2>{{ 'CARD.SUCCESS_TITLE' | translate }}</h2>
+      <p>{{ 'CARD.SUCCESS_DESC' | translate }}</p>
+      <button class="btn-primary" routerLink="/home">{{ 'CARD.GO_HOME' | translate }}</button>
+    </div>
+
+    <!-- Error -->
+    <div class="state-screen error" *ngIf="state === 'error'">
+      <div class="error-icon">❌</div>
+      <h2>{{ 'COMMON.ERROR' | translate }}</h2>
+      <p>{{ errorMessage }}</p>
+      <button class="btn-primary" (click)="loadCard()">{{ 'CARD.RETRY' | translate }}</button>
+    </div>
+
   </div>
-
-  <!-- iyzico Card Save Form -->
-  <div class="content" *ngIf="state === 'form'">
-    <div class="form-info">
-      <div class="form-info-icon">💳</div>
-      <h2>{{ 'CARD.ADD_TITLE' | translate }}</h2>
-      <p>{{ 'CARD.ADD_DESC' | translate }}</p>
-    </div>
-
-    <div class="iyzico-wrapper">
-      <div #iyzicoContainer id="iyzipay-checkout-form" class="responsive"></div>
-    </div>
-
-    <!-- DEV ONLY -->
-    <div class="dev-box">
-      <p>🛠 <strong>{{ 'CARD.DEV_MODE' | translate }}</strong></p>
-      <button class="btn-dev" (click)="devInjectCard()">{{ 'CARD.DEV_INJECT' | translate }}</button>
-    </div>
-
-    <p class="secure-note">🔒 {{ 'CARD.SECURE_NOTE' | translate }}</p>
-  </div>
-
-  <!-- Success -->
-  <div class="state-screen success" *ngIf="state === 'success'">
-    <div class="success-icon">✅</div>
-    <h2>{{ 'CARD.SUCCESS_TITLE' | translate }}</h2>
-    <p>{{ 'CARD.SUCCESS_DESC' | translate }}</p>
-    <button class="btn-primary" routerLink="/home">{{ 'CARD.GO_HOME' | translate }}</button>
-  </div>
-
-  <!-- Error -->
-  <div class="state-screen error" *ngIf="state === 'error'">
-    <div class="error-icon">❌</div>
-    <h2>{{ 'COMMON.ERROR' | translate }}</h2>
-    <p>{{ errorMessage }}</p>
-    <button class="btn-primary" (click)="loadCard()">{{ 'CARD.RETRY' | translate }}</button>
-  </div>
-</div>
+</app-page-layout>

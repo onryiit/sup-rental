@@ -1,0 +1,37 @@
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 13px;
+}
+
+.breadcrumb-link {
+  color: #0077b6;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: background 0.15s;
+
+  &:hover {
+    background: #e0f2fe;
+    color: #005f92;
+  }
+}
+
+.breadcrumb-active {
+  color: #1e293b;
+  font-weight: 600;
+  padding: 2px 4px;
+}
+
+.breadcrumb-sep {
+  display: flex;
+  align-items: center;
+  color: #94a3b8;
+
+  span {
+    font-size: 16px;
+    line-height: 1;
+  }
+}

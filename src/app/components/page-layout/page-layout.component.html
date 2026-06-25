@@ -1,0 +1,56 @@
+<!--
+  PAGE LAYOUT TEMPLATE
+  ┌──────────────────────────────────────────────┐
+  │  TOOLBAR  (optional slot: [pageToolbar])      │  breadcrumbs, back button, etc.
+  ├──────────────────────────────────────────────┤
+  │  HEADER   (blue gradient strip)              │  icon + title + [pageActions] slot
+  ├──────────────────────────────────────────────┤
+  │  CONTENT  (white card)                       │  default ng-content
+  └──────────────────────────────────────────────┘
+
+  Usage:
+    <app-page-layout icon="dashboard" title="My Page">
+      <div pageToolbar> ... breadcrumb ... </div>
+      <div pageActions> ... buttons ... </div>
+      <div class="p-6"> ... page content ... </div>
+    </app-page-layout>
+-->
+
+<div class="page-layout">
+
+  <!-- ── Toolbar row (optional) ──────────────────────────────────────── -->
+  <div class="page-toolbar">
+    <ng-content select="[pageToolbar]"></ng-content>
+  </div>
+
+  <!-- ── Colored header strip ────────────────────────────────────────── -->
+  <div class="page-header">
+    <div class="page-header-inner">
+
+      <!-- Left: icon + title + subtitle -->
+      <div class="page-title">
+        <div class="title-icon" *ngIf="icon">
+          <span class="material-symbols-outlined">{{ icon }}</span>
+        </div>
+        <div>
+          <h1>{{ title }}</h1>
+          <p *ngIf="subtitle">{{ subtitle }}</p>
+        </div>
+      </div>
+
+      <!-- Right: caller-provided actions (tabs, buttons, search…) -->
+      <div class="page-actions">
+        <ng-content select="[pageActions]"></ng-content>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── White content card ───────────────────────────────────────────── -->
+  <div class="page-content">
+    <div class="content-card">
+      <ng-content></ng-content>
+    </div>
+  </div>
+
+</div>

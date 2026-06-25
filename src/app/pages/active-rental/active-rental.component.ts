@@ -3,10 +3,12 @@ import { Router, RouterLink } from '@angular/router';
 import { NgIf, DecimalPipe } from '@angular/common';
 import { MeterService, MeterStatus } from '../../services/meter.service';
 import { TranslatePipe } from '@ngx-translate/core';
+import { PageLayoutComponent } from '../../components/page-layout/page-layout.component';
+import { BreadcrumbComponent } from '../../components/breadcrumb/breadcrumb.component';
 
 @Component({
     selector: 'app-active-rental',
-    imports: [NgIf, RouterLink, DecimalPipe, TranslatePipe],
+    imports: [NgIf, RouterLink, DecimalPipe, TranslatePipe, PageLayoutComponent, BreadcrumbComponent],
     templateUrl: './active-rental.component.html',
     styleUrls: ['./active-rental.component.scss']
 })

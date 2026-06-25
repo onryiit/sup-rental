@@ -52,8 +52,22 @@ export const routes: Routes = [
   },
   {
     path: 'admin',
-    loadComponent: () => import('./pages/admin/admin.component').then(c => c.AdminComponent),
     canActivate: [authGuard, adminGuard],
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      {
+        path: 'dashboard',
+        loadComponent: () => import('./pages/admin/dashboard/admin-dashboard.component').then(c => c.AdminDashboardComponent),
+      },
+      {
+        path: 'sups',
+        loadComponent: () => import('./pages/admin/sups/admin-sups.component').then(c => c.AdminSupsComponent),
+      },
+      {
+        path: 'rentals',
+        loadComponent: () => import('./pages/admin/rentals/admin-rentals.component').then(c => c.AdminRentalsComponent),
+      },
+    ],
   },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/home' },

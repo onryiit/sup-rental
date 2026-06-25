@@ -1,0 +1,68 @@
+<app-page-layout icon="dashboard" title="{{ 'ADMIN.TAB_DASHBOARD' | translate }}">
+
+  <!-- Toolbar slot: breadcrumb -->
+  <app-breadcrumb pageToolbar [items]="[
+    { label: 'NAV.HOME', translate: true, url: '/home' },
+    { label: 'NAV.ADMIN', translate: true },
+    { label: 'ADMIN.TAB_DASHBOARD', translate: true }
+  ]"></app-breadcrumb>
+  <div class="page-inner">
+
+    <div class="stats-grid">
+      <div class="stat-card green">
+        <span class="material-symbols-outlined stat-icon">check_circle</span>
+        <div class="stat-value">{{ availableCount }}</div>
+        <div class="stat-label">{{ 'ADMIN.STATUS_AVAILABLE' | translate }} SUP</div>
+      </div>
+      <div class="stat-card blue">
+        <span class="material-symbols-outlined stat-icon">surfing</span>
+        <div class="stat-value">{{ rentedCount }}</div>
+        <div class="stat-label">{{ 'ADMIN.STATUS_RENTED' | translate }} SUP</div>
+      </div>
+      <div class="stat-card orange">
+        <span class="material-symbols-outlined stat-icon">pending</span>
+        <div class="stat-value">{{ activeRentals.length }}</div>
+        <div class="stat-label">{{ 'ADMIN.ACTIVE_RENTALS' | translate }}</div>
+      </div>
+      <div class="stat-card purple">
+        <span class="material-symbols-outlined stat-icon">payments</span>
+        <div class="stat-value">₺{{ todayRevenue }}</div>
+        <div class="stat-label">{{ 'ADMIN.REVENUE' | translate }}</div>
+      </div>
+    </div>
+
+    <div class="section-title">
+      <span class="material-symbols-outlined">bolt</span>
+      {{ 'ADMIN.ACTIVE_RENTALS' | translate }}
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>{{ 'ADMIN.COL_RENTAL_ID' | translate }}</th>
+            <th>{{ 'ADMIN.COL_QR' | translate }}</th>
+            <th>{{ 'ADMIN.COL_BEACH' | translate }}</th>
+            <th>{{ 'ADMIN.COL_CABINET' | translate }}</th>
+            <th>{{ 'ADMIN.COL_DURATION' | translate }}</th>
+            <th>{{ 'ADMIN.COL_AMOUNT' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let r of activeRentals">
+            <td><code>{{ r.id }}</code></td>
+            <td>{{ r.qrCode }}</td>
+            <td>{{ getBeachName(r.beachId) }}</td>
+            <td>#{{ r.cabinetNumber }}</td>
+            <td>{{ r.durationMinutes }} {{ 'ACTIVE.MIN' | translate }}</td>
+            <td><strong>₺{{ r.price }}</strong></td>
+          </tr>
+          <tr *ngIf="activeRentals.length === 0">
+            <td colspan="6" class="empty-row">{{ 'ADMIN.NO_ACTIVE' | translate }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</app-page-layout>

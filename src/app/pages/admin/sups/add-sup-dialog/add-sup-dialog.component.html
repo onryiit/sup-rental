@@ -1,0 +1,109 @@
+<div class="dialog-wrapper">
+
+  <!-- Blue header -->
+  <div class="dialog-head" matDialogTitle>
+    <div class="flex items-center gap-2">
+      <span class="material-symbols-outlined text-white">surfing</span>
+      <span class="text-white font-semibold text-base" *ngIf="step === 'form'">{{ 'ADMIN.ADD_SUP' | translate }}</span>
+      <span class="text-white font-semibold text-base" *ngIf="step === 'qr'">{{ 'ADMIN.QR_READY' | translate }}</span>
+    </div>
+    <button class="close-btn" (click)="dialogRef.close()">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+  </div>
+
+  <!-- ── STEP 1: Form ── -->
+  <div *ngIf="step === 'form'" class="dialog-body">
+    <form [formGroup]="supForm" name="supForm" class="flex flex-col gap-5">
+
+      <div class="field">
+        <label class="field-label">{{ 'ADMIN.SUP_NAME' | translate }} <span class="text-red-500">*</span></label>
+        <input
+          type="text"
+          formControlName="name"
+          placeholder="SUP #4 - Yeşil"
+          class="field-input"
+          [class.field-error]="supForm.controls['name'].touched && supForm.controls['name'].invalid"
+        />
+        <span class="error-text" *ngIf="supForm.controls['name'].touched && supForm.controls['name'].invalid">
+          Bu alan zorunludur
+        </span>
+      </div>
+
+      <div class="field">
+        <label class="field-label">{{ 'ADMIN.BEACH' | translate }} <span class="text-red-500">*</span></label>
+        <div class="select-wrap">
+          <select
+            formControlName="beachId"
+            class="field-input"
+            [class.field-error]="supForm.controls['beachId'].touched && supForm.controls['beachId'].invalid"
+          >
+            <option *ngFor="let b of beaches" [value]="b.id">{{ b.name }}</option>
+          </select>
+          <span class="material-symbols-outlined select-arrow">expand_more</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">{{ 'ADMIN.CABINET_NO' | translate }} <span class="text-red-500">*</span></label>
+        <input
+          type="number"
+          min="1"
+          formControlName="cabinetNumber"
+          class="field-input"
+          [class.field-error]="supForm.controls['cabinetNumber'].touched && supForm.controls['cabinetNumber'].invalid"
+        />
+      </div>
+
+      <!-- QR preview -->
+      <div class="qr-preview">
+        <span class="material-symbols-outlined text-blue-500 text-3xl">qr_code</span>
+        <div>
+          <p class="text-xs font-semibold text-blue-500 uppercase tracking-widest mb-0.5">
+            {{ 'ADMIN.QR_PREVIEW' | translate }}
+          </p>
+          <code class="font-mono font-bold text-slate-800 tracking-wider text-base">{{ previewQrCode }}</code>
+        </div>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- ── STEP 2: QR ── -->
+  <div *ngIf="step === 'qr'" class="dialog-body flex flex-col items-center gap-5">
+
+    <div class="flex items-center gap-2 bg-emerald-100 text-emerald-700 font-semibold text-sm px-4 py-2 rounded-full">
+      <span class="material-symbols-outlined text-lg">check_circle</span>
+      {{ 'ADMIN.SUP_ADDED' | translate }}
+    </div>
+
+    <img [src]="qrDataUrl" alt="QR" class="w-52 h-52 rounded-2xl border border-slate-200 shadow-sm" />
+
+    <code class="font-mono font-bold text-slate-700 bg-slate-100 px-5 py-2 rounded-xl tracking-widest text-lg">
+      {{ generatedQrCode }}
+    </code>
+
+    <p class="text-sm text-slate-500 text-center max-w-xs leading-relaxed">
+      {{ 'ADMIN.QR_HINT' | translate }}
+    </p>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="dialog-footer">
+    <ng-container *ngIf="step === 'form'">
+      <button class="btn-ghost" (click)="dialogRef.close()">{{ 'COMMON.CANCEL' | translate }}</button>
+      <button class="btn-primary" (click)="onSubmit()" [disabled]="supForm.invalid || submitting">
+        {{ 'ADMIN.SAVE_SUP' | translate }}
+      </button>
+    </ng-container>
+    <ng-container *ngIf="step === 'qr'">
+      <button class="btn-ghost" (click)="confirmClose()">{{ 'COMMON.CLOSE' | translate }}</button>
+      <button class="btn-primary" (click)="printQr()">
+        <span class="material-symbols-outlined text-lg leading-none">print</span>
+        {{ 'ADMIN.PRINT_QR' | translate }}
+      </button>
+    </ng-container>
+  </div>
+
+</div>
