@@ -1,10 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgIf } from '@angular/common';
 import { SupService } from '../../services/sup.service';
 import { Sup, Beach } from '../../models';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-qr-landing',
+  standalone: true,
+  imports: [NgIf, TranslatePipe],
   templateUrl: './qr-landing.component.html',
   styleUrls: ['./qr-landing.component.scss'],
 })

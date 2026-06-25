@@ -1,21 +1,21 @@
 <div class="summary-page">
 
   <div class="page-header">
-    <button class="back-btn" (click)="goBack()">← Geri</button>
-    <span class="header-title">Kiralama</span>
+    <button class="back-btn" (click)="goBack()">← {{ 'COMMON.BACK' | translate }}</button>
+    <span class="header-title">{{ 'SUMMARY.HEADER' | translate }}</span>
     <span></span>
   </div>
 
   <div class="loading-state" *ngIf="loading">
     <div class="wave-spinner"><div></div><div></div><div></div></div>
-    <p>SUP bilgisi yükleniyor...</p>
+    <p>{{ 'COMMON.LOADING' | translate }}</p>
   </div>
 
   <div class="empty-state" *ngIf="!loading && notFound">
     <span>🤔</span>
-    <h2>SUP Bulunamadı</h2>
-    <p>Bu QR kod sistemde kayıtlı değil.</p>
-    <button class="btn-primary" routerLink="/scan">Tekrar Tara</button>
+    <h2>{{ 'SUMMARY.NOT_FOUND' | translate }}</h2>
+    <p>{{ 'SUMMARY.NOT_FOUND_DESC' | translate }}</p>
+    <button class="btn-primary" routerLink="/scan">{{ 'SUMMARY.SCAN_AGAIN' | translate }}</button>
   </div>
 
   <div class="content" *ngIf="!loading && sup">
@@ -32,7 +32,7 @@
           <span>📍</span><span>{{ beach.name }}</span>
         </div>
         <div class="meta-row">
-          <span>🔒</span><span>Kabin #{{ sup.cabinetNumber }}</span>
+          <span>🔒</span><span>{{ 'SUMMARY.CABINET' | translate }} #{{ sup.cabinetNumber }}</span>
         </div>
         <div class="meta-row">
           <span class="status-text" [class]="'st-' + sup.status">● {{ statusLabel }}</span>
@@ -41,7 +41,7 @@
     </div>
 
     <div class="warning-box" *ngIf="sup.status !== 'available'">
-      ⚠️ Bu SUP şu an <strong>{{ statusLabel | lowercase }}</strong>. Başka bir SUP'un QR'ını taratın.
+      ⚠️ {{ 'SUMMARY.UNAVAILABLE_MSG' | translate }} <strong>{{ statusLabel | lowercase }}</strong>. {{ 'SUMMARY.TRY_ANOTHER' | translate }}
     </div>
 
     <!-- Meter Pricing (only when available) -->
@@ -51,21 +51,21 @@
       <div class="pricing-card" *ngIf="meterConfig">
         <div class="pricing-headline">
           <span class="price-big">₺{{ meterConfig.pricePerMinute }}</span>
-          <span class="price-unit">/ dakika</span>
+          <span class="price-unit">/ {{ 'ACTIVE.MIN' | translate }}</span>
         </div>
-        <p class="pricing-sub">Kullandığın kadar öde · Kabin kapanınca sayaç durur</p>
+        <p class="pricing-sub">{{ 'SUMMARY.PRICING_SUB' | translate }}</p>
 
         <div class="pricing-rows">
           <div class="pricing-row">
-            <span>🔒 Teminat (bloke)</span>
+            <span>🔒 {{ 'SUMMARY.PREAUTH' | translate }}</span>
             <strong>₺{{ meterConfig.preAuthAmount }}</strong>
           </div>
           <div class="pricing-row">
-            <span>⏱ Max süre</span>
-            <strong>{{ meterConfig.maxHours }} saat</strong>
+            <span>⏱ {{ 'SUMMARY.MAX_DURATION' | translate }}</span>
+            <strong>{{ meterConfig.maxHours }} {{ 'ACTIVE.HOUR' | translate }}</strong>
           </div>
           <div class="pricing-row">
-            <span>💰 Max ücret</span>
+            <span>💰 {{ 'SUMMARY.MAX_COST' | translate }}</span>
             <strong>₺{{ maxCost }}</strong>
           </div>
         </div>
@@ -78,16 +78,16 @@
           <span class="cs-icon" *ngIf="!cardInfo?.hasCard">⚠️</span>
           <div>
             <div class="cs-title" *ngIf="cardInfo?.hasCard">
-              Kart kayıtlı · •••• {{ cardInfo?.lastFourDigits }}
+              {{ 'SUMMARY.CARD_REGISTERED' | translate }} · •••• {{ cardInfo?.lastFourDigits }}
             </div>
             <div class="cs-title warn" *ngIf="!cardInfo?.hasCard">
-              Kart eklemeden kiralama yapılamaz
+              {{ 'SUMMARY.NO_CARD_MSG' | translate }}
             </div>
-            <div class="cs-sub">Teminat bu karta bloke edilecek</div>
+            <div class="cs-sub">{{ 'SUMMARY.CARD_SUB' | translate }}</div>
           </div>
         </div>
         <button class="cs-change" routerLink="/card-setup">
-          {{ cardInfo?.hasCard ? 'Değiştir' : 'Kart Ekle' }}
+          {{ (cardInfo?.hasCard ? 'SUMMARY.CHANGE_CARD' : 'SUMMARY.ADD_CARD') | translate }}
         </button>
       </div>
 
@@ -95,27 +95,27 @@
       <div class="how-card">
         <div class="how-row">
           <span class="how-num">1</span>
-          <span>Kirala → ₺{{ meterConfig?.preAuthAmount }} teminat bloke edilir</span>
+          <span>{{ 'SUMMARY.HOW1' | translate:{ amount: meterConfig?.preAuthAmount } }}</span>
         </div>
         <div class="how-row">
           <span class="how-num">2</span>
-          <span>SUP'u al, istediğin kadar kullan</span>
+          <span>{{ 'SUMMARY.HOW2' | translate }}</span>
         </div>
         <div class="how-row">
           <span class="how-num">3</span>
-          <span>Kabine bırak, kapıyı kapat → sadece kullandığın kadar çekilir</span>
+          <span>{{ 'SUMMARY.HOW3' | translate }}</span>
         </div>
       </div>
 
       <!-- CTA -->
       <button class="btn-start" [disabled]="starting" (click)="startRental()">
         <span *ngIf="!starting">
-          {{ cardInfo?.hasCard ? '🔓 Kiralama Başlat' : '💳 Kart Ekle ve Başlat' }}
+          {{ (cardInfo?.hasCard ? 'SUMMARY.START_BTN' : 'SUMMARY.ADD_CARD') | translate }}
         </span>
         <span *ngIf="starting" class="btn-spinner"></span>
       </button>
 
-      <p class="secure-note">🔒 Güvenli ödeme · iyzico · PCI DSS</p>
+      <p class="secure-note">🔒 {{ 'SUMMARY.SECURE_NOTE' | translate }}</p>
 
     </ng-container>
   </div>

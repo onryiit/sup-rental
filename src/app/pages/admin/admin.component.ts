@@ -1,15 +1,18 @@
 import { Component, OnInit } from '@angular/core';
+import { NgIf, NgFor } from '@angular/common';
 import { SupService } from '../../services/sup.service';
 import { RentalService } from '../../services/rental.service';
 import { IotService } from '../../services/iot.service';
 import { Sup, Beach, Rental } from '../../models';
+import { TranslatePipe } from '@ngx-translate/core';
 
 type Tab = 'dashboard' | 'sups' | 'rentals';
 
 @Component({
-  selector: 'app-admin',
-  templateUrl: './admin.component.html',
-  styleUrls: ['./admin.component.scss'],
+    selector: 'app-admin',
+    imports: [NgIf, NgFor, TranslatePipe],
+    templateUrl: './admin.component.html',
+    styleUrls: ['./admin.component.scss']
 })
 export class AdminComponent implements OnInit {
   activeTab: Tab = 'dashboard';

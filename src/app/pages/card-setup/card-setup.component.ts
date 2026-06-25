@@ -1,15 +1,18 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgIf } from '@angular/common';
 import { CardService, CardInfo } from '../../services/card.service';
 import { MeterService } from '../../services/meter.service';
 import { AuthService } from '../../services/auth.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 type PageState = 'loading' | 'has-card' | 'form' | 'success' | 'error';
 
 @Component({
-  selector: 'app-card-setup',
-  templateUrl: './card-setup.component.html',
-  styleUrls: ['./card-setup.component.scss'],
+    selector: 'app-card-setup',
+    imports: [NgIf, TranslatePipe],
+    templateUrl: './card-setup.component.html',
+    styleUrls: ['./card-setup.component.scss']
 })
 export class CardSetupComponent implements OnInit, AfterViewInit {
   @ViewChild('iyzicoContainer') iyzicoContainer!: ElementRef;
@@ -17,7 +20,6 @@ export class CardSetupComponent implements OnInit, AfterViewInit {
   state: PageState = 'loading';
   cardInfo: CardInfo | null = null;
   errorMessage = '';
-  // rentalId var ise kart kaydedince otomatik kiralama başlat
   pendingRentalId: string | null = null;
 
   constructor(
@@ -34,7 +36,6 @@ export class CardSetupComponent implements OnInit, AfterViewInit {
 
     if (status === 'success') {
       this.state = 'success';
-      // Bekleyen kiralama varsa geri dön
       const pending = localStorage.getItem('sup_pending_rental');
       if (pending) {
         localStorage.removeItem('sup_pending_rental');

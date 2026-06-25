@@ -3,15 +3,15 @@
   <!-- Loading -->
   <div class="state-screen" *ngIf="state === 'loading'">
     <div class="wave-spinner"><div></div><div></div><div></div></div>
-    <p>Yükleniyor...</p>
+    <p>{{ 'COMMON.LOADING' | translate }}</p>
   </div>
 
   <!-- No rental -->
   <div class="state-screen" *ngIf="state === 'no-rental'">
     <span class="empty-icon">🏖️</span>
-    <h2>Aktif Kiralama Yok</h2>
-    <p>Şu an aktif bir kiralamanız bulunmuyor.</p>
-    <button class="btn-primary" routerLink="/home">Ana Sayfa</button>
+    <h2>{{ 'ACTIVE.NO_RENTAL' | translate }}</h2>
+    <p>{{ 'ACTIVE.NO_RENTAL_DESC' | translate }}</p>
+    <button class="btn-primary" routerLink="/home">{{ 'ACTIVE.GO_HOME' | translate }}</button>
   </div>
 
   <!-- Active Rental -->
@@ -19,20 +19,20 @@
 
     <!-- Top bar -->
     <div class="top-bar">
-      <div class="sup-badge">🏄 Aktif Kiralama</div>
+      <div class="sup-badge">🏄 {{ 'ACTIVE.TITLE' | translate }}</div>
       <div class="rental-id">{{ status.rentalId }}</div>
     </div>
 
     <!-- Overdue warning -->
     <div class="overdue-banner" *ngIf="status.isOverdue">
-      ⚠️ Maksimum süre aşıldı! Kartınızdan ₺{{ status.preAuthAmount }} çekildi.
+      ⚠️ {{ 'ACTIVE.OVERDUE_MSG' | translate:{ amount: status.preAuthAmount } }}
     </div>
 
     <!-- Live cost meter -->
     <div class="meter-card">
-      <div class="meter-label">Tahmini Ücret</div>
+      <div class="meter-label">{{ 'ACTIVE.ESTIMATED' | translate }}</div>
       <div class="meter-amount">₺{{ status.estimatedPrice | number:'1.2-2' }}</div>
-      <div class="meter-sub">{{ status.pricePerMinute }} ₺ / dakika</div>
+      <div class="meter-sub">{{ status.pricePerMinute }} ₺ / {{ 'ACTIVE.MIN' | translate }}</div>
 
       <div class="progress-wrap">
         <div class="progress-bar">
@@ -42,7 +42,7 @@
         </div>
         <div class="progress-labels">
           <span>{{ elapsedDisplay }}</span>
-          <span>Max {{ status.maxMinutes / 60 | number:'1.0-0' }} saat</span>
+          <span>{{ 'ACTIVE.MAX' | translate }} {{ status.maxMinutes / 60 | number:'1.0-0' }} {{ 'ACTIVE.HOUR' | translate }}</span>
         </div>
       </div>
     </div>
@@ -52,8 +52,8 @@
       <div class="pa-row">
         <span class="pa-icon">🔒</span>
         <div>
-          <div class="pa-title">Bloke Edilen Teminat</div>
-          <div class="pa-sub">Kabin kapandığında sadece kullandığınız kadar çekilir</div>
+          <div class="pa-title">{{ 'ACTIVE.PREAUTH_TITLE' | translate }}</div>
+          <div class="pa-sub">{{ 'ACTIVE.PREAUTH_SUB' | translate }}</div>
         </div>
         <div class="pa-amount">₺{{ status.preAuthAmount }}</div>
       </div>
@@ -62,33 +62,33 @@
     <!-- Info -->
     <div class="info-card">
       <div class="info-row">
-        <span>⏱</span><span>Geçen süre</span><strong>{{ elapsedDisplay }}</strong>
+        <span>⏱</span><span>{{ 'ACTIVE.ELAPSED' | translate }}</span><strong>{{ elapsedDisplay }}</strong>
       </div>
       <div class="info-row">
-        <span>💰</span><span>Tahmini ücret</span><strong>₺{{ status.estimatedPrice | number:'1.2-2' }}</strong>
+        <span>💰</span><span>{{ 'ACTIVE.ESTIMATED' | translate }}</span><strong>₺{{ status.estimatedPrice | number:'1.2-2' }}</strong>
       </div>
       <div class="info-row">
-        <span>🔓</span><span>Teminat</span><strong>₺{{ status.preAuthAmount }}</strong>
+        <span>🔒</span><span>{{ 'ACTIVE.PREAUTH_TITLE' | translate }}</span><strong>₺{{ status.preAuthAmount }}</strong>
       </div>
     </div>
 
     <!-- Return instruction -->
     <div class="return-box">
-      <div class="return-title">SUP'u İade Etmek İçin</div>
+      <div class="return-title">{{ 'ACTIVE.RETURN_TITLE' | translate }}</div>
       <div class="return-step">
         <span class="rs-num">1</span>
-        <span>SUP'u kabin önüne bırakın</span>
+        <span>{{ 'ACTIVE.RETURN_STEP1' | translate }}</span>
       </div>
       <div class="return-step">
         <span class="rs-num">2</span>
-        <span>Kabine tekrar yerleştirip kapıyı kapatın</span>
+        <span>{{ 'ACTIVE.RETURN_STEP2' | translate }}</span>
       </div>
       <div class="return-step">
         <span class="rs-num">3</span>
-        <span>Kabin kilitleniyor → sistem otomatik fatura kesiyor</span>
+        <span>{{ 'ACTIVE.RETURN_STEP3' | translate }}</span>
       </div>
     </div>
 
-    <button class="btn-home" (click)="goHome()">Ana Sayfa</button>
+    <button class="btn-home" (click)="goHome()">{{ 'ACTIVE.GO_HOME' | translate }}</button>
   </div>
 </div>

@@ -4,51 +4,52 @@
   <div class="auth-card">
     <div class="brand">
       <div class="brand-icon">🏄</div>
-      <h1>SUP Kiralama</h1>
-      <p>Hesabınıza giriş yapın</p>
+      <h1>Aqua SUP</h1>
+      <p>{{ 'AUTH.LOGIN_SUBTITLE' | translate }}</p>
     </div>
 
     <form [formGroup]="form" (ngSubmit)="submit()">
       <div class="field">
-        <label>E-posta</label>
+        <label>{{ 'AUTH.EMAIL' | translate }}</label>
         <div class="input-wrap">
           <span class="input-icon">✉️</span>
-          <input type="email" formControlName="email" placeholder="ornek@email.com" autocomplete="email" />
+          <input type="email" formControlName="email"
+            [placeholder]="'AUTH.EMAIL_PLACEHOLDER' | translate"
+            autocomplete="email" />
         </div>
         <span class="field-error" *ngIf="form.get('email')?.touched && form.get('email')?.invalid">
-          Geçerli bir e-posta girin
+          {{ 'AUTH.EMAIL_ERROR' | translate }}
         </span>
       </div>
 
       <div class="field">
-        <label>Şifre</label>
+        <label>{{ 'AUTH.PASSWORD' | translate }}</label>
         <div class="input-wrap">
           <span class="input-icon">🔒</span>
           <input [type]="showPassword ? 'text' : 'password'" formControlName="password"
-            placeholder="Şifreniz" autocomplete="current-password" />
+            [placeholder]="'AUTH.PASSWORD_PLACEHOLDER' | translate"
+            autocomplete="current-password" />
           <button type="button" class="toggle-pw" (click)="showPassword = !showPassword">
             {{ showPassword ? '🙈' : '👁️' }}
           </button>
         </div>
         <span class="field-error" *ngIf="form.get('password')?.touched && form.get('password')?.invalid">
-          En az 6 karakter
+          {{ 'AUTH.PASSWORD_ERROR' | translate }}
         </span>
       </div>
 
       <div class="error-banner" *ngIf="error">{{ error }}</div>
 
       <button type="submit" class="btn-primary" [disabled]="loading">
-        <span *ngIf="!loading">Giriş Yap</span>
+        <span *ngIf="!loading">{{ 'AUTH.LOGIN_BTN' | translate }}</span>
         <span *ngIf="loading" class="btn-spinner"></span>
       </button>
     </form>
 
-    <div class="divider"><span>veya</span></div>
-
-    <p class="alt-link">Hesabınız yok mu? <a routerLink="/register">Kayıt Ol</a></p>
-
-    <div class="demo-hint">
-      <strong>Demo:</strong> ali&#64;test.com / 123456
-    </div>
+    <div class="divider"><span>{{ 'AUTH.NO_ACCOUNT' | translate }}</span></div>
+    <p class="alt-link">
+      {{ 'AUTH.NO_ACCOUNT' | translate }}
+      <a routerLink="/register">{{ 'AUTH.REGISTER_BTN' | translate }}</a>
+    </p>
   </div>
 </div>

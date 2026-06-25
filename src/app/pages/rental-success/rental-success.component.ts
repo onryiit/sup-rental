@@ -1,20 +1,19 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgIf } from '@angular/common';
 import { RentalService } from '../../services/rental.service';
 import { PaymentService } from '../../services/payment.service';
 import { Rental } from '../../models';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-rental-success',
-  templateUrl: './rental-success.component.html',
-  styleUrls: ['./rental-success.component.scss'],
+    selector: 'app-rental-success',
+    imports: [NgIf, TranslatePipe],
+    templateUrl: './rental-success.component.html',
+    styleUrls: ['./rental-success.component.scss']
 })
 export class RentalSuccessComponent implements OnInit, OnDestroy {
   rental: Rental | null = null;
-  // 'verifying' → iyzico callback'ten döndük, backend'den sonuç bekliyoruz
-  // 'success'   → kilit açıldı
-  // 'fail'      → ödeme başarısız
-  // 'error'     → teknik hata
   state: 'verifying' | 'success' | 'fail' | 'error' = 'verifying';
   errorMessage = '';
   remainingSeconds = 0;
@@ -29,19 +28,16 @@ export class RentalSuccessComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const params = this.route.snapshot.queryParamMap;
-    const status  = params.get('status');   // 'fail' | 'error' (backend'den)
-    const token   = params.get('token');    // başarılı callback'ten
+    const status  = params.get('status');
+    const token   = params.get('token');
     const msg     = params.get('msg');
 
-    // Backend başarısız/hata ile yönlendirdiyse
     if (status === 'fail' || status === 'error') {
       this.state = status;
       this.errorMessage = msg ? decodeURIComponent(msg) : 'Ödeme tamamlanamadı.';
       return;
     }
 
-    // Başarılı callback: backend rental'ı güncelledi, kilidi zaten açtı
-    // Sadece görüntülemek için rental bilgisini getir
     if (token) {
       this.paymentService.getPaymentResult(token).subscribe({
         next: (res) => {
@@ -64,7 +60,6 @@ export class RentalSuccessComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Token yoksa (eski mock akışı veya doğrudan navigasyon)
     this.rental = this.rentalService.getActiveRental();
     if (this.rental) {
       this.calcRemaining();
@@ -75,13 +70,8 @@ export class RentalSuccessComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Backend'den gelen plain object'i Rental'a çevir (Date nesneleri için)
   private buildRental(raw: any): Rental {
-    return {
-      ...raw,
-      startTime: new Date(raw.startTime),
-      endTime: new Date(raw.endTime),
-    };
+    return { ...raw, startTime: new Date(raw.startTime), endTime: new Date(raw.endTime) };
   }
 
   private calcRemaining(): void {

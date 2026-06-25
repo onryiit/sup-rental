@@ -1,11 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { NgIf, DecimalPipe } from '@angular/common';
 import { MeterService, MeterStatus } from '../../services/meter.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-active-rental',
-  templateUrl: './active-rental.component.html',
-  styleUrls: ['./active-rental.component.scss'],
+    selector: 'app-active-rental',
+    imports: [NgIf, RouterLink, DecimalPipe, TranslatePipe],
+    templateUrl: './active-rental.component.html',
+    styleUrls: ['./active-rental.component.scss']
 })
 export class ActiveRentalComponent implements OnInit, OnDestroy {
   status: MeterStatus | null = null;
@@ -18,7 +21,6 @@ export class ActiveRentalComponent implements OnInit, OnDestroy {
     const rentalId = this.meter.getActiveRentalId();
     if (!rentalId) { this.state = 'no-rental'; return; }
     this.fetchStatus(rentalId);
-    // Her 30 saniyede backend'den güncel bilgi al
     this.pollInterval = setInterval(() => this.fetchStatus(rentalId), 30000);
   }
 

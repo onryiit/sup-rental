@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
@@ -21,20 +22,23 @@ const REFRESH_BEFORE_MS = 5 * 60 * 1000; // expire'dan 5 dakika önce yenile
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  private http = inject(HttpClient);
   private userSubject  = new BehaviorSubject<User | null>(null);
   private readySubject = new BehaviorSubject<boolean>(false);
   private idToken: string | null = null;
+  private accessToken: string | null = null;
   private refreshTimer: any = null;
 
   user$  = this.userSubject.asObservable();
   ready$ = this.readySubject.asObservable(); // guard bunu bekler
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private router: Router) {}
 
-  get currentUser(): User | null  { return this.userSubject.value; }
-  get isLoggedIn(): boolean       { return !!this.currentUser && !!this.idToken; }
-  get isReady(): boolean          { return this.readySubject.value; }
+  get currentUser(): User | null   { return this.userSubject.value; }
+  get isLoggedIn(): boolean        { return !!this.currentUser && !!this.idToken; }
+  get isReady(): boolean           { return this.readySubject.value; }
   get bearerToken(): string | null { return this.idToken; }
+  get isAdmin(): boolean           { return !!this.currentUser?.roles?.includes('Admin'); }
 
   /** AppComponent ngOnInit'ten çağrılır */
   initSession(): void {
@@ -109,22 +113,27 @@ export class AuthService {
   }
 
   logout(): void {
-    this.http.post(`${environment.apiUrl}/auth/logout`, {}, { withCredentials: true })
-      .subscribe({ error: () => {} });
+    this.http.post(
+      `${environment.apiUrl}/auth/logout`,
+      { accessToken: this.accessToken },
+      { withCredentials: true }
+    ).subscribe({ error: () => {} });
     this.clearSession();
   }
 
   // ── Private helpers ───────────────────────────────────────────────
 
   private applyTokens(tokens: AuthTokens, existingUser?: User): void {
-    this.idToken = tokens.idToken;
+    this.idToken     = tokens.idToken;
+    this.accessToken = tokens.accessToken;
 
     const payload = this.decodeJwtPayload(tokens.idToken);
     const user: User = existingUser ?? {
       id:    payload.sub,
-      name:  payload.name  || '',
+      name:  payload.name || [payload.given_name, payload.family_name].filter(Boolean).join(' ') || '',
       email: payload.email || '',
       phone: payload.phone_number || '',
+      roles: payload['cognito:groups'] || [],
     };
 
     const expiresAt = Date.now() + tokens.expiresIn * 1000;
@@ -165,7 +174,8 @@ export class AuthService {
     if (this.refreshTimer) clearTimeout(this.refreshTimer);
     localStorage.removeItem(SESSION_KEY);
     this.userSubject.next(null);
-    this.idToken = null;
+    this.idToken     = null;
+    this.accessToken = null;
     this.router.navigate(['/login']);
   }
 

@@ -2,8 +2,8 @@
 
   <!-- Header -->
   <div class="scanner-header">
-    <button class="back-btn" (click)="goBack()">← Geri</button>
-    <span class="title">QR Tara</span>
+    <button class="back-btn" (click)="goBack()">← {{ 'COMMON.BACK' | translate }}</button>
+    <span class="title">{{ 'SCAN.TITLE' | translate }}</span>
     <span></span>
   </div>
 
@@ -17,40 +17,40 @@
       <div class="scan-corner br"></div>
       <div class="scan-line"></div>
     </div>
-    <p class="scan-hint">SUP kabininin üzerindeki QR kodu çerçeve içine alın</p>
+    <p class="scan-hint">{{ 'SCAN.HINT' | translate }}</p>
   </div>
 
   <!-- Found -->
   <div class="feedback-card success" *ngIf="state === 'found'">
     <div class="fb-icon">✅</div>
-    <h2>QR Kod Okundu!</h2>
-    <p>Yönlendiriliyorsunuz...</p>
+    <h2>{{ 'SCAN.FOUND_TITLE' | translate }}</h2>
+    <p>{{ 'SCAN.FOUND_SUB' | translate }}</p>
     <code>{{ scannedCode }}</code>
   </div>
 
   <!-- Camera denied -->
   <div class="feedback-card warn" *ngIf="state === 'denied'">
     <div class="fb-icon">📵</div>
-    <h2>Kamera İzni Gerekli</h2>
+    <h2>{{ 'SCAN.DENIED_TITLE' | translate }}</h2>
     <p>{{ errorMessage }}</p>
   </div>
 
   <!-- Camera error -->
   <div class="feedback-card error" *ngIf="state === 'error'">
     <div class="fb-icon">⚠️</div>
-    <h2>Kamera Açılamadı</h2>
+    <h2>{{ 'SCAN.ERROR_TITLE' | translate }}</h2>
     <p>{{ errorMessage }}</p>
-    <button class="btn-retry" (click)="startScan()">Tekrar Dene</button>
+    <button class="btn-retry" (click)="startScan()">{{ 'SCAN.RETRY' | translate }}</button>
   </div>
 
   <!-- Manual code entry (fallback) -->
   <div class="manual-section" *ngIf="state !== 'found'">
-    <div class="divider-or"><span>veya kodu elle girin</span></div>
+    <div class="divider-or"><span>{{ 'SCAN.OR_MANUAL' | translate }}</span></div>
     <div class="manual-row">
       <input #manualInput type="text" placeholder="QR-OLUD-001" class="manual-input" />
-      <button class="btn-manual" (click)="enterManual(manualInput.value)">Git →</button>
+      <button class="btn-manual" (click)="enterManual(manualInput.value)">{{ 'SCAN.MANUAL_BTN' | translate }} →</button>
     </div>
-    <p class="manual-hint">Test için: <strong>QR-OLUD-001</strong></p>
+    <p class="manual-hint">{{ 'SCAN.MANUAL_HINT' | translate }} <strong>QR-OLUD-001</strong></p>
   </div>
 
 </div>

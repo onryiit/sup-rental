@@ -1,0 +1,57 @@
+<!-- ─── DESKTOP SIDEBAR (md+) ─────────────────────────────────────── -->
+<aside
+  class="hidden md:flex flex-col fixed left-0 top-0 h-full bg-white border-r border-gray-100 shadow-sm z-50 transition-all duration-300 overflow-hidden"
+  [ngClass]="sidebarOpen ? 'w-56' : 'w-16'"
+>
+  <!-- Logo / toggle -->
+  <button
+    (click)="toggleSidebar()"
+    class="flex items-center gap-3 px-4 py-5 text-brand-500 hover:bg-brand-50 transition-colors w-full text-left"
+  >
+    <img src="assets/images/logos/logo.png" alt="Aqua SUP" class="w-8 h-8 flex-shrink-0 object-contain" />
+    <span class="font-bold text-lg tracking-tight whitespace-nowrap overflow-hidden transition-all duration-300"
+          [ngClass]="sidebarOpen ? 'opacity-100 w-auto' : 'opacity-0 w-0'">
+      Aqua SUP
+    </span>
+  </button>
+
+  <div class="h-px bg-gray-100 mx-3"></div>
+
+  <!-- Nav items -->
+  <nav class="flex flex-col gap-1 p-2 flex-1 mt-2">
+    <a
+      *ngFor="let item of visibleItems"
+      [routerLink]="item.path"
+      routerLinkActive="bg-brand-50 text-brand-500 font-semibold"
+      [routerLinkActiveOptions]="{ exact: false }"
+      class="flex items-center gap-3 px-3 py-3 rounded-xl text-gray-500 hover:bg-gray-50 hover:text-brand-500 transition-all duration-200"
+    >
+      <span class="material-symbols-outlined text-[22px] flex-shrink-0">{{ item.icon }}</span>
+      <span class="whitespace-nowrap overflow-hidden transition-all duration-300 text-sm"
+            [ngClass]="sidebarOpen ? 'opacity-100 w-auto' : 'opacity-0 w-0'">
+        {{ item.label | translate }}
+      </span>
+    </a>
+  </nav>
+
+</aside>
+
+<!-- ─── MOBILE BOTTOM BAR (< md) ──────────────────────────────────── -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 shadow-[0_-2px_12px_rgba(0,0,0,0.07)] z-50 safe-area-bottom">
+  <div class="flex items-stretch">
+    <a
+      *ngFor="let item of visibleItems"
+      [routerLink]="item.path"
+      routerLinkActive="text-brand-500"
+      #rla="routerLinkActive"
+      [routerLinkActiveOptions]="{ exact: false }"
+      class="flex-1 flex flex-col items-center justify-center gap-1 py-3 text-gray-400 hover:text-brand-500 transition-colors relative"
+    >
+      <span class="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-0.5 rounded-full bg-brand-500 transition-all duration-300"
+            [ngClass]="rla.isActive ? 'opacity-100' : 'opacity-0'"></span>
+      <span class="material-symbols-outlined text-[24px] leading-none">{{ item.icon }}</span>
+      <span class="text-[10px] font-medium leading-none">{{ item.label | translate }}</span>
+    </a>
+
+  </div>
+</nav>

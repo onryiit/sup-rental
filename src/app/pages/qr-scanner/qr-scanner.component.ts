@@ -1,13 +1,16 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
+import { NgIf } from '@angular/common';
 import { Html5Qrcode } from 'html5-qrcode';
+import { TranslatePipe } from '@ngx-translate/core';
 
 type ScanState = 'idle' | 'scanning' | 'found' | 'error' | 'denied';
 
 @Component({
-  selector: 'app-qr-scanner',
-  templateUrl: './qr-scanner.component.html',
-  styleUrls: ['./qr-scanner.component.scss'],
+    selector: 'app-qr-scanner',
+    imports: [NgIf, TranslatePipe],
+    templateUrl: './qr-scanner.component.html',
+    styleUrls: ['./qr-scanner.component.scss']
 })
 export class QrScannerComponent implements OnInit, OnDestroy {
   state: ScanState = 'idle';
@@ -29,7 +32,7 @@ export class QrScannerComponent implements OnInit, OnDestroy {
         { facingMode: 'environment' },
         { fps: 10, qrbox: { width: 240, height: 240 } },
         (decodedText) => this.onScanSuccess(decodedText),
-        () => {}   // suppress per-frame errors
+        () => {}
       )
       .catch(err => {
         const msg: string = err?.toString() ?? '';
@@ -45,7 +48,6 @@ export class QrScannerComponent implements OnInit, OnDestroy {
     this.state = 'found';
     this.scannedCode = code;
     this.stopScanner().then(() => {
-      // QR code is either a full URL (?qr=...) or just the code itself
       const qrParam = this.extractQrCode(code);
       setTimeout(() => this.router.navigate(['/summary', qrParam]), 600);
     });
@@ -57,7 +59,7 @@ export class QrScannerComponent implements OnInit, OnDestroy {
       const qr = url.searchParams.get('qr');
       if (qr) return qr;
     } catch {}
-    return raw; // raw code like QR-OLUD-001
+    return raw;
   }
 
   private async stopScanner(): Promise<void> {

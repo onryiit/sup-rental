@@ -1,12 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { NgIf, NgFor } from '@angular/common';
 import { SupService } from '../../services/sup.service';
 import { RentalService } from '../../services/rental.service';
 import { Sup, Beach, RentalDuration } from '../../models';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-rental-flow',
+  standalone: true,
+  imports: [NgIf, NgFor, ReactiveFormsModule, TranslatePipe],
   templateUrl: './rental-flow.component.html',
   styleUrls: ['./rental-flow.component.scss'],
 })

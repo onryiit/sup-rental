@@ -2,94 +2,105 @@
   <div class="wave-bg"></div>
   <div class="auth-card">
 
-    <!-- STEP 1: Kayıt formu -->
+    <!-- STEP 1: Register form -->
     <ng-container *ngIf="step === 'register'">
       <div class="brand">
         <div class="brand-icon">🏄</div>
-        <h1>Kayıt Ol</h1>
-        <p>Hemen ücretsiz hesap oluştur</p>
+        <h1>{{ 'AUTH.REGISTER_TITLE' | translate }}</h1>
+        <p>{{ 'AUTH.REGISTER_SUBTITLE' | translate }}</p>
       </div>
 
       <form [formGroup]="form" (ngSubmit)="submit()">
         <div class="field">
-          <label>Ad Soyad</label>
+          <label>{{ 'AUTH.NAME' | translate }}</label>
           <div class="input-wrap">
             <span class="input-icon">👤</span>
-            <input type="text" formControlName="name" placeholder="Adınız Soyadınız" />
+            <input type="text" formControlName="name" [placeholder]="'AUTH.NAME_PLACEHOLDER' | translate" />
           </div>
-          <span class="field-error" *ngIf="form.get('name')?.touched && form.get('name')?.invalid">En az 2 karakter</span>
+          <span class="field-error" *ngIf="form.get('name')?.touched && form.get('name')?.invalid">
+            {{ 'AUTH.NAME_ERROR' | translate }}
+          </span>
         </div>
 
         <div class="field">
-          <label>E-posta</label>
+          <label>{{ 'AUTH.EMAIL' | translate }}</label>
           <div class="input-wrap">
             <span class="input-icon">✉️</span>
-            <input type="email" formControlName="email" placeholder="ornek@email.com" />
+            <input type="email" formControlName="email" [placeholder]="'AUTH.EMAIL_PLACEHOLDER' | translate" />
           </div>
-          <span class="field-error" *ngIf="form.get('email')?.touched && form.get('email')?.invalid">Geçerli bir e-posta girin</span>
+          <span class="field-error" *ngIf="form.get('email')?.touched && form.get('email')?.invalid">
+            {{ 'AUTH.EMAIL_ERROR' | translate }}
+          </span>
         </div>
 
         <div class="field">
-          <label>Telefon</label>
+          <label>{{ 'AUTH.PHONE' | translate }}</label>
           <div class="input-wrap">
             <span class="input-icon">📱</span>
-            <input type="tel" formControlName="phone" placeholder="05xx xxx xx xx" />
+            <input type="tel" formControlName="phone" [placeholder]="'AUTH.PHONE_PLACEHOLDER' | translate" />
           </div>
-          <span class="field-error" *ngIf="form.get('phone')?.touched && form.get('phone')?.invalid">Geçerli bir Türk numarası girin</span>
+          <span class="field-error" *ngIf="form.get('phone')?.touched && form.get('phone')?.invalid">
+            {{ 'AUTH.PHONE_ERROR' | translate }}
+          </span>
         </div>
 
         <div class="field">
-          <label>Şifre</label>
+          <label>{{ 'AUTH.PASSWORD' | translate }}</label>
           <div class="input-wrap">
             <span class="input-icon">🔒</span>
-            <input [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="En az 8 karakter" />
+            <input [type]="showPassword ? 'text' : 'password'" formControlName="password"
+              [placeholder]="'AUTH.PASSWORD_ERROR_8' | translate" />
             <button type="button" class="toggle-pw" (click)="showPassword = !showPassword">
               {{ showPassword ? '🙈' : '👁️' }}
             </button>
           </div>
-          <span class="field-error" *ngIf="form.get('password')?.touched && form.get('password')?.invalid">En az 8 karakter</span>
+          <span class="field-error" *ngIf="form.get('password')?.touched && form.get('password')?.invalid">
+            {{ 'AUTH.PASSWORD_ERROR_8' | translate }}
+          </span>
         </div>
 
         <div class="error-banner" *ngIf="error">{{ error }}</div>
 
         <button type="submit" class="btn-primary" [disabled]="loading">
-          <span *ngIf="!loading">Kayıt Ol</span>
+          <span *ngIf="!loading">{{ 'AUTH.REGISTER_BTN' | translate }}</span>
           <span *ngIf="loading" class="btn-spinner"></span>
         </button>
       </form>
 
-      <div class="divider"><span>zaten hesabın var mı?</span></div>
-      <p class="alt-link"><a routerLink="/login">Giriş Yap</a></p>
+      <div class="divider"><span>{{ 'AUTH.HAS_ACCOUNT' | translate }}</span></div>
+      <p class="alt-link"><a routerLink="/login">{{ 'AUTH.LOGIN_BTN' | translate }}</a></p>
     </ng-container>
 
-    <!-- STEP 2: E-posta doğrulama -->
+    <!-- STEP 2: Email verification -->
     <ng-container *ngIf="step === 'confirm'">
       <div class="brand">
         <div class="brand-icon">📧</div>
-        <h1>E-postanı Doğrula</h1>
-        <p>{{ pendingEmail }} adresine 6 haneli kod gönderdik</p>
+        <h1>{{ 'AUTH.VERIFY_TITLE' | translate }}</h1>
+        <p>{{ 'AUTH.VERIFY_SUBTITLE' | translate: { email: pendingEmail } }}</p>
       </div>
 
       <form [formGroup]="confirmForm" (ngSubmit)="confirmCode()">
         <div class="field">
-          <label>Doğrulama Kodu</label>
+          <label>{{ 'AUTH.VERIFY_CODE' | translate }}</label>
           <div class="input-wrap">
             <span class="input-icon">🔑</span>
             <input type="text" formControlName="code" placeholder="123456" maxlength="6" inputmode="numeric" />
           </div>
-          <span class="field-error" *ngIf="confirmForm.get('code')?.touched && confirmForm.get('code')?.invalid">6 haneli kodu girin</span>
+          <span class="field-error" *ngIf="confirmForm.get('code')?.touched && confirmForm.get('code')?.invalid">
+            {{ 'AUTH.VERIFY_ERROR' | translate }}
+          </span>
         </div>
 
         <div class="error-banner" *ngIf="error">{{ error }}</div>
 
         <button type="submit" class="btn-primary" [disabled]="loading">
-          <span *ngIf="!loading">Doğrula</span>
+          <span *ngIf="!loading">{{ 'AUTH.VERIFY_BTN' | translate }}</span>
           <span *ngIf="loading" class="btn-spinner"></span>
         </button>
       </form>
 
       <p class="alt-link" style="margin-top: 16px;">
-        <a (click)="step = 'register'" style="cursor:pointer">← Geri dön</a>
+        <a (click)="step = 'register'" style="cursor:pointer">← {{ 'COMMON.BACK' | translate }}</a>
       </p>
     </ng-container>
 

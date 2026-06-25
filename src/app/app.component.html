@@ -1,1 +1,39 @@
-<router-outlet></router-outlet>
+<app-navbar
+  *ngIf="auth.isLoggedIn"
+  (sidebarToggled)="onSidebarToggled($event)"
+></app-navbar>
+
+<!-- Fixed top-right toolbar -->
+<div
+  *ngIf="auth.isLoggedIn"
+  class="fixed top-0 right-0 z-[60] flex items-center gap-1 px-3 h-12"
+>
+  <button
+    (click)="lang.toggle()"
+    class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-gray-500 hover:bg-white hover:shadow-sm transition-all text-sm font-medium"
+  >
+    <img [src]="lang.current === 'tr' ? 'assets/images/flags/en.png' : 'assets/images/flags/tr.png'"
+         [alt]="lang.current === 'tr' ? 'EN' : 'TR'"
+         class="w-5 h-5 rounded-sm object-cover" />
+    <span class="text-xs font-semibold">{{ lang.current === 'tr' ? 'EN' : 'TR' }}</span>
+  </button>
+  <button
+    (click)="auth.logout()"
+    class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-gray-500 hover:bg-red-50 hover:text-red-500 transition-all text-sm"
+  >
+    <span class="material-symbols-outlined text-[20px] leading-none">logout</span>
+    <span class="text-xs font-semibold hidden sm:inline">{{ 'NAV.LOGOUT' | translate }}</span>
+  </button>
+</div>
+
+<main
+  class="min-h-screen transition-all duration-300"
+  [ngClass]="{
+    'md:pl-56': auth.isLoggedIn && sidebarOpen,
+    'md:pl-16': auth.isLoggedIn && !sidebarOpen,
+    'pb-20':    auth.isLoggedIn,
+    'md:pb-0':  auth.isLoggedIn
+  }"
+>
+  <router-outlet></router-outlet>
+</main>

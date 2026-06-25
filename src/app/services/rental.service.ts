@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { Rental, RentalDuration } from '../models';
@@ -6,10 +7,11 @@ import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class RentalService {
+  private http = inject(HttpClient);
   private apiUrl = environment.apiUrl;
   private activeRental: Rental | null = null;
 
-  constructor(private http: HttpClient) {}
+  
 
   createRental(supId: string, qrCode: string, beachId: string, cabinetNumber: number, duration: RentalDuration, phone: string): Observable<Rental> {
     const now = new Date();

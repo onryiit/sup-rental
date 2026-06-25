@@ -1,40 +1,39 @@
-import { Injectable } from '@angular/core';
-import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError, EMPTY } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { catchError, switchMap, throwError, EMPTY } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
-@Injectable()
-export class AuthInterceptor implements HttpInterceptor {
-  private refreshing = false;
+let refreshing = false;
 
-  constructor(private auth: AuthService) {}
+export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  const auth = inject(AuthService);
 
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const token = this.auth.bearerToken;
-    const authed = token ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } }) : req;
+  const isAuthRoute = req.url.includes('/auth/');
+  const token = isAuthRoute ? null : auth.bearerToken;
+  const authed = token
+    ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
+    : req;
 
-    return next.handle(authed).pipe(
-      catchError((err: HttpErrorResponse) => {
-        if (err.status === 401 && !req.url.includes('/auth/') && !this.refreshing) {
-          this.refreshing = true;
-          return this.auth.refresh().pipe(
-            switchMap(() => {
-              this.refreshing = false;
-              const retried = req.clone({
-                setHeaders: { Authorization: `Bearer ${this.auth.bearerToken}` },
-              });
-              return next.handle(retried);
-            }),
-            catchError(() => {
-              this.refreshing = false;
-              this.auth.logout();
-              return EMPTY;
-            })
-          );
-        }
-        return throwError(() => err);
-      })
-    );
-  }
-}
+  return next(authed).pipe(
+    catchError((err: HttpErrorResponse) => {
+      if (err.status === 401 && !isAuthRoute && !refreshing) {
+        refreshing = true;
+        return auth.refresh().pipe(
+          switchMap(() => {
+            refreshing = false;
+            const retried = req.clone({
+              setHeaders: { Authorization: `Bearer ${auth.bearerToken}` },
+            });
+            return next(retried);
+          }),
+          catchError(() => {
+            refreshing = false;
+            auth.logout();
+            return EMPTY;
+          })
+        );
+      }
+      return throwError(() => err);
+    })
+  );
+};

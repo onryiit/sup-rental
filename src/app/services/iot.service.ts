@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of, delay } from 'rxjs';
 import { IoTCommand } from '../models';
@@ -12,9 +13,10 @@ export interface IoTResponse {
 
 @Injectable({ providedIn: 'root' })
 export class IotService {
+  private http = inject(HttpClient);
   private apiUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) {}
+  
 
   // Backend publishes MQTT message to AWS IoT Core topic: sups/{deviceId}/commands
   // Raspberry Pi subscribes to this topic and controls the relay

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { Beach, Sup, RentalDuration } from '../models';
@@ -24,9 +25,10 @@ export const RENTAL_DURATIONS: RentalDuration[] = [
 
 @Injectable({ providedIn: 'root' })
 export class SupService {
+  private http = inject(HttpClient);
   private apiUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) {}
+  
 
   getSupByQrCode(qrCode: string): Observable<Sup | null> {
     // TODO: this.http.get<Sup>(`${this.apiUrl}/sups/qr/${qrCode}`)

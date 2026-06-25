@@ -1,15 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgIf, LowerCasePipe } from '@angular/common';
 import { SupService } from '../../services/sup.service';
 import { MeterService } from '../../services/meter.service';
 import { CardService, CardInfo } from '../../services/card.service';
 import { AuthService } from '../../services/auth.service';
 import { Sup, Beach } from '../../models';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-rental-summary',
-  templateUrl: './rental-summary.component.html',
-  styleUrls: ['./rental-summary.component.scss'],
+    selector: 'app-rental-summary',
+    imports: [NgIf, LowerCasePipe, TranslatePipe],
+    templateUrl: './rental-summary.component.html',
+    styleUrls: ['./rental-summary.component.scss']
 })
 export class RentalSummaryComponent implements OnInit {
   sup: Sup | null = null;
@@ -37,7 +40,6 @@ export class RentalSummaryComponent implements OnInit {
 
     if (!this.qrCode) { this.notFound = true; this.loading = false; return; }
 
-    // Paralel yükle: SUP + kart durumu + fiyat config
     this.meterService.getConfig().subscribe(cfg => this.meterConfig = cfg);
 
     const user = this.auth.currentUser;
@@ -61,7 +63,6 @@ export class RentalSummaryComponent implements OnInit {
     if (!this.auth.isLoggedIn) { this.router.navigate(['/login']); return; }
 
     if (!this.cardInfo?.hasCard) {
-      // Kart yoksa kart setup'a yönlendir, geri dönsün diye qrCode'u sakla
       localStorage.setItem('sup_pending_rental', this.qrCode);
       this.router.navigate(['/card-setup']);
       return;

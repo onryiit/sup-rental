@@ -5,15 +5,8 @@
     <div class="topbar-left">
       <div class="avatar">{{ user?.name?.charAt(0) }}</div>
       <div>
-        <div class="greeting">{{ greeting }},</div>
-        <div class="username">{{ user?.name }}</div>
+        <div class="greeting">{{ greeting | translate }}, {{ user?.name }}</div>
       </div>
-    </div>
-    <div class="topbar-right">
-      <button class="card-btn" (click)="goCardSetup()" title="Kart Yönetimi">
-        {{ cardInfo?.hasCard ? '💳' : '⚠️' }}
-      </button>
-      <button class="logout-btn" (click)="logout()">Çıkış</button>
     </div>
   </div>
 
@@ -22,30 +15,20 @@
     <div class="ab-left">
       <span class="ab-dot"></span>
       <div>
-        <div class="ab-title">Aktif Kiralama</div>
-        <div class="ab-sub">Sayaç çalışıyor · Detaylar için dokun</div>
+        <div class="ab-title">{{ 'HOME.ACTIVE_RENTAL' | translate }}</div>
+        <div class="ab-sub">{{ 'HOME.ACTIVE_RENTAL_SUB' | translate }}</div>
       </div>
     </div>
     <span class="ab-arrow">→</span>
   </div>
 
-  <!-- Card missing warning -->
-  <div class="card-warn" *ngIf="cardInfo && !cardInfo.hasCard" (click)="goCardSetup()">
-    <span>⚠️</span>
-    <div>
-      <strong>Kayıtlı kart yok</strong>
-      <p>Kiralama yapabilmek için kart eklemelisiniz.</p>
-    </div>
-    <span class="cw-arrow">›</span>
-  </div>
-
   <!-- Hero / Scan CTA -->
   <div class="hero">
     <div class="hero-content">
-      <h2>SUP kiralamak için<br>QR kodu okutun</h2>
-      <p>Plajdaki kabinin üzerindeki QR kodu kameranıza gösterin</p>
+      <h2>{{ 'HOME.SCAN_TITLE' | translate }}</h2>
+      <p>{{ 'HOME.SCAN_DESC' | translate }}</p>
       <button class="btn-scan" (click)="goScan()">
-        <span>📷</span> QR Tara
+        <span>📷</span> {{ 'HOME.SCAN_BTN' | translate }}
       </button>
     </div>
     <div class="hero-sup">🏄</div>
@@ -53,33 +36,33 @@
 
   <!-- How it works -->
   <div class="section">
-    <h3 class="section-title">Nasıl Çalışır?</h3>
+    <h3 class="section-title">{{ 'HOME.HOW_TITLE' | translate }}</h3>
     <div class="steps">
       <div class="step">
         <div class="step-icon">📷</div>
-        <div class="step-text">QR Tara</div>
+        <div class="step-text">{{ 'HOME.STEP_SCAN' | translate }}</div>
       </div>
       <div class="step-arrow">→</div>
       <div class="step">
         <div class="step-icon">🔓</div>
-        <div class="step-text">Kabin Açılır</div>
+        <div class="step-text">{{ 'HOME.STEP_UNLOCK' | translate }}</div>
       </div>
       <div class="step-arrow">→</div>
       <div class="step">
         <div class="step-icon">⏱</div>
-        <div class="step-text">Sayaç Başlar</div>
+        <div class="step-text">{{ 'HOME.STEP_TIMER' | translate }}</div>
       </div>
       <div class="step-arrow">→</div>
       <div class="step">
         <div class="step-icon">🔒</div>
-        <div class="step-text">İade Et & Öde</div>
+        <div class="step-text">{{ 'HOME.STEP_RETURN' | translate }}</div>
       </div>
     </div>
   </div>
 
   <!-- Past Rentals -->
   <div class="section">
-    <h3 class="section-title">Geçmiş Kiralamalar</h3>
+    <h3 class="section-title">{{ 'HOME.HISTORY_TITLE' | translate }}</h3>
 
     <div class="loading-row" *ngIf="loading">
       <div class="skeleton"></div><div class="skeleton"></div>
@@ -87,7 +70,7 @@
 
     <div class="empty-rentals" *ngIf="!loading && pastRentals.length === 0">
       <span>🏖️</span>
-      <p>Henüz kiralama yapmadınız.<br>İlk kiralaman için QR tarayın!</p>
+      <p>{{ 'HOME.HISTORY_EMPTY' | translate }}</p>
     </div>
 
     <div class="rental-list" *ngIf="!loading && pastRentals.length > 0">
@@ -102,7 +85,7 @@
           </div>
         </div>
         <div class="rental-badge" [class]="r.status === 'completed' ? 'badge-done' : 'badge-active'">
-          {{ r.status === 'completed' ? 'Tamamlandı' : 'Aktif' }}
+          {{ (r.status === 'completed' ? 'HOME.STATUS_COMPLETED' : 'HOME.STATUS_ACTIVE') | translate }}
         </div>
       </div>
     </div>

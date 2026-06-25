@@ -1,14 +1,16 @@
 import { Component, OnInit, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgIf } from '@angular/common';
 import { RentalService } from '../../services/rental.service';
 import { PaymentService } from '../../services/payment.service';
 import { AuthService } from '../../services/auth.service';
 import { Rental } from '../../models';
 
 @Component({
-  selector: 'app-payment',
-  templateUrl: './payment.component.html',
-  styleUrls: ['./payment.component.scss'],
+    selector: 'app-payment',
+    imports: [NgIf],
+    templateUrl: './payment.component.html',
+    styleUrls: ['./payment.component.scss']
 })
 export class PaymentComponent implements OnInit, AfterViewInit {
   @ViewChild('iyzicoContainer') iyzicoContainer!: ElementRef;
@@ -30,7 +32,6 @@ export class PaymentComponent implements OnInit, AfterViewInit {
     this.rental = this.rentalService.getActiveRental();
     if (!this.rental) { this.router.navigate(['/home']); return; }
 
-    // iyzico callback'ten dönüldüyse (token query param)
     const token = this.route.snapshot.queryParamMap.get('token');
     if (token) {
       this.iyzicoToken = token;
@@ -54,7 +55,6 @@ export class PaymentComponent implements OnInit, AfterViewInit {
       next: (res) => {
         this.iyzicoToken = res.token;
         this.state = 'form';
-        // iyzico checkout form HTML'ini DOM'a inject et
         setTimeout(() => this.injectIyzicoForm(res.checkoutFormContent), 100);
       },
       error: (err) => {
@@ -68,7 +68,6 @@ export class PaymentComponent implements OnInit, AfterViewInit {
     if (!this.iyzicoContainer) return;
     const el = this.iyzicoContainer.nativeElement;
     el.innerHTML = html;
-    // iyzico script tag'lerini çalıştır
     Array.from(el.querySelectorAll('script')).forEach((oldScript: any) => {
       const newScript = document.createElement('script');
       Array.from(oldScript.attributes).forEach((attr: any) => {
@@ -79,7 +78,6 @@ export class PaymentComponent implements OnInit, AfterViewInit {
     });
   }
 
-  // iyzico callback URL'inden token ile sonucu sorgula
   verifyPayment(token: string): void {
     this.state = 'verifying';
     this.paymentService.getPaymentResult(token).subscribe({
