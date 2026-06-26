@@ -11,9 +11,9 @@ const MOCK_BEACHES: Beach[] = [
 ];
 
 const MOCK_SUPS: Sup[] = [
-  { id: 'sup-001', qrCode: 'QR-OLUD-001', beachId: 'beach-001', cabinetNumber: 1, status: 'available', name: 'SUP #1 - Mavi' },
-  { id: 'sup-002', qrCode: 'QR-OLUD-002', beachId: 'beach-001', cabinetNumber: 2, status: 'rented', name: 'SUP #2 - Kırmızı' },
-  { id: 'sup-003', qrCode: 'QR-PATA-001', beachId: 'beach-002', cabinetNumber: 1, status: 'available', name: 'SUP #3 - Sarı' },
+  { id: 'sup-001', qrCode: 'QR-OLUD-001', beachId: 'beach-001', cabinetNumber: 1, status: '1', name: 'SUP #1 - Mavi' },
+  { id: 'sup-002', qrCode: 'QR-OLUD-002', beachId: 'beach-001', cabinetNumber: 2, status: '2', name: 'SUP #2 - Kırmızı' },
+  { id: 'sup-003', qrCode: 'QR-PATA-001', beachId: 'beach-002', cabinetNumber: 1, status: '1', name: 'SUP #3 - Sarı' },
 ];
 
 export const RENTAL_DURATIONS: RentalDuration[] = [

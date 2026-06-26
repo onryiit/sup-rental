@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { NgFor, NgIf } from '@angular/common';
+import { NgFor, NgIf, NgClass } from '@angular/common';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -10,6 +10,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatChipsModule } from '@angular/material/chips';
 import { SupService } from '../../../services/sup.service';
 import { IotService } from '../../../services/iot.service';
 import { Sup, Beach } from '../../../models';
@@ -25,6 +26,7 @@ import { AddSupDialogComponent, AddSupDialogResult } from './add-sup-dialog/add-
   imports: [
     TranslatePipe,
     MatTableModule, MatSortModule, MatPaginatorModule,
+    NgClass,
     MatMenuModule, MatIconModule, MatButtonModule,
     PageLayoutComponent, BreadcrumbComponent,
   ],
@@ -82,13 +84,21 @@ export class AdminSupsComponent implements OnInit, OnDestroy {
       });
     });
   }
-  getNameForStatus(status:string){
-    const available = this.translateService.instant("ADMIN.AVAILABLE")
-    const rented = this.translateService.instant("ADMIN.RENTED")
-    if(status === "1"){
-      return available
-    }else if(status === "2"){
-      return rented
+  getNameForStatus(status: string): string {
+    switch (status) {
+      case '1': return this.translateService.instant('ADMIN.AVAILABLE');
+      case '2': return this.translateService.instant('ADMIN.RENTED');
+      case '3': return this.translateService.instant('ADMIN.MAINTENANCE');
+      default:  return status;
+    }
+  }
+
+  getColorForStatus(status: string): string {
+    switch (status) {
+      case '1': return 'status-dot--available';
+      case '2': return 'status-dot--rented';
+      case '3': return 'status-dot--maintenance';
+      default:  return '';
     }
   } 
   unlockManual(sup: Sup): void {

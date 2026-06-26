@@ -1,17 +1,42 @@
-/* Angular Material prebuilt theme — only targets .mat-* / .mdc-* selectors, no global overrides */
 @import '@angular/material/prebuilt-themes/azure-blue.css';
 
-/* Override Material MDC font — does NOT affect icon fonts (material-symbols-outlined uses its own font-face) */
 :root {
-  --mdc-typography-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  --mat-table-row-item-label-text-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  --mat-table-header-headline-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  --mat-menu-item-label-text-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  --mat-select-trigger-text-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  --mat-paginator-container-text-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  --mdc-filled-text-field-label-text-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  --mdc-outlined-text-field-label-text-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  --mat-form-field-container-text-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  /* ── Font ── */
+  --font: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  /* ── Type scale ── */
+  --text-xs:   12px;   /* kolon başlıkları */
+  --text-sm:   14px;   /* tablo satırları, chip, badge */
+  --text-base: 15px;   /* genel body, input */
+  --text-md:   16px;   /* section başlık */
+  --text-lg:   20px;   /* sayfa başlık */
+  --text-xl:   24px;   /* büyük başlık */
+
+  /* ── Weight ── */
+  --fw-normal:    400;
+  --fw-medium:    500;
+  --fw-semibold:  600;
+  --fw-bold:      700;
+
+  /* ── Material MDC font override (icon fontlarına dokunmaz) ── */
+  --mdc-typography-font-family:               var(--font);
+  --mat-table-row-item-label-text-font:       var(--font);
+  --mat-table-row-item-label-text-size:       var(--text-sm);
+  --mat-table-row-item-label-text-weight:     var(--fw-normal);
+  --mat-table-header-headline-font:           var(--font);
+  --mat-table-header-headline-size:           var(--text-xs);
+  --mat-table-header-headline-weight:         var(--fw-semibold);
+  --mat-menu-item-label-text-font:            var(--font);
+  --mat-menu-item-label-text-size:            var(--text-sm);
+  --mat-select-trigger-text-font:             var(--font);
+  --mat-paginator-container-text-font:        var(--font);
+  --mat-paginator-container-text-size:        var(--text-sm);
+  --mdc-filled-text-field-label-text-font:    var(--font);
+  --mdc-outlined-text-field-label-text-font:  var(--font);
+  --mat-form-field-container-text-font:       var(--font);
+  --mdc-chip-label-text-font:                 var(--font);
+  --mdc-chip-label-text-size:                 var(--text-sm);
+  --mdc-chip-label-text-weight:               var(--fw-medium);
 }
 
 @tailwind base;
@@ -25,13 +50,14 @@
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: var(--font);
+  font-size: var(--text-base);
+  font-weight: var(--fw-normal);
   -webkit-font-smoothing: antialiased;
 }
 
 a { text-decoration: none; color: inherit; }
 
-/* Restore button resets lost when Tailwind preflight is off */
 button {
   border: none;
   background: none;
@@ -45,4 +71,5 @@ button {
 
 input, select, textarea {
   font-family: inherit;
+  font-size: inherit;
 }

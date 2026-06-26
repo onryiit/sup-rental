@@ -59,8 +59,9 @@
         <ng-container matColumnDef="status">
           <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'ADMIN.COL_STATUS' | translate }}</mat-header-cell>
           <mat-cell *matCellDef="let row">
-            <span class="badge" [class]="'badge-' + row.status">
-              {{getNameForStatus(row.status)}}
+            <span class="status-label">
+              <span class="status-dot" [ngClass]="getColorForStatus(row.status)"></span>
+              {{ getNameForStatus(row.status) }}
             </span>
           </mat-cell>
         </ng-container>

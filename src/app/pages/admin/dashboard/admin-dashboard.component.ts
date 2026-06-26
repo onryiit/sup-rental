@@ -51,8 +51,8 @@ export class AdminDashboardComponent implements OnInit {
     return this.beaches.find(b => b.id === beachId)?.name ?? beachId;
   }
 
-  get availableCount(): number { return this.sups.filter(s => s.status === 'available').length; }
-  get rentedCount(): number    { return this.sups.filter(s => s.status === 'rented').length; }
+  get availableCount(): number { return this.sups.filter(s => s.status === '1').length; }
+  get rentedCount(): number    { return this.sups.filter(s => s.status === '2').length; }
   get activeRentals(): Rental[] { return this.rentals.filter(r => r.status === 'active'); }
   get todayRevenue(): number {
     const today = new Date().toDateString();

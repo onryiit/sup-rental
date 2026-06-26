@@ -21,7 +21,7 @@
   <div class="content" *ngIf="!loading && sup">
 
     <!-- SUP Card -->
-    <div class="sup-card" [class.unavailable]="sup.status !== 'available'">
+    <div class="sup-card" [class.unavailable]="sup.status !== '1'">
       <div class="sup-visual">
         <span class="sup-emoji">🏄</span>
         <div class="status-dot" [class]="'dot-' + sup.status"></div>
@@ -40,12 +40,12 @@
       </div>
     </div>
 
-    <div class="warning-box" *ngIf="sup.status !== 'available'">
+    <div class="warning-box" *ngIf="sup.status !== '1'">
       ⚠️ {{ 'SUMMARY.UNAVAILABLE_MSG' | translate }} <strong>{{ statusLabel | lowercase }}</strong>. {{ 'SUMMARY.TRY_ANOTHER' | translate }}
     </div>
 
     <!-- Meter Pricing (only when available) -->
-    <ng-container *ngIf="sup.status === 'available'">
+    <ng-container *ngIf="sup.status === '1'">
 
       <!-- Pricing info -->
       <div class="pricing-card" *ngIf="meterConfig">

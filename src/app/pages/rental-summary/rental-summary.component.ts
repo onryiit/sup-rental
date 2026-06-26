@@ -101,9 +101,9 @@ export class RentalSummaryComponent implements OnInit {
 
   get statusLabel(): string {
     switch (this.sup?.status) {
-      case 'available': return 'Müsait';
-      case 'rented': return 'Kiralanmış';
-      case 'maintenance': return 'Bakımda';
+      case '1': return 'Müsait';
+      case '2': return 'Kiralanmış';
+      case '3': return 'Bakımda';
       default: return '';
     }
   }

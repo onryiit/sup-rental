@@ -76,7 +76,7 @@ export class AddSupDialogComponent implements OnInit {
     const { name, beachId, cabinetNumber } = this.supForm.value;
     const qrCode = this.previewQrCode;
 
-    const sup: Omit<Sup, 'id'> = { name, beachId, cabinetNumber, qrCode, status: 'available' };
+    const sup: Omit<Sup, 'id'> = { name, beachId, cabinetNumber, qrCode, status: '1' };
 
     this.qrDataUrl = await QRCode.toDataURL(qrCode, {
       width: 280,

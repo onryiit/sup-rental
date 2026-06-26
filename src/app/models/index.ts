@@ -14,7 +14,7 @@ export interface Sup {
   qrCode: string;
   beachId: string;
   cabinetNumber: number;
-  status: 'available' | 'rented' | 'maintenance';
+  status: '1' | '2' | '3';
   name: string;
   imageUrl?: string;
 }
