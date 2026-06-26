@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectorRef } from '@ang
 import { NgFor, NgIf } from '@angular/common';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
@@ -48,6 +48,7 @@ export class AdminSupsComponent implements OnInit, OnDestroy {
     private iotService: IotService,
     private matDialog: MatDialog,
     private cd: ChangeDetectorRef,
+    private translateService: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -81,7 +82,15 @@ export class AdminSupsComponent implements OnInit, OnDestroy {
       });
     });
   }
-
+  getNameForStatus(status:string){
+    const available = this.translateService.instant("ADMIN.AVAILABLE")
+    const rented = this.translateService.instant("ADMIN.RENTED")
+    if(status === "1"){
+      return available
+    }else if(status === "2"){
+      return rented
+    }
+  } 
   unlockManual(sup: Sup): void {
     this.iotService.unlockCabinet(`cabinet-${sup.cabinetNumber}`, 'MANUAL').subscribe(res => {
       alert(res.message);

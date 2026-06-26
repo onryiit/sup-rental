@@ -45,7 +45,6 @@ export class SupService {
   getAllSups(): Observable<Sup[]> {
     return this.http.get<ApiResponse<Sup[]>>(`${this.apiUrl}/sups`).pipe(
       map(res => {
-        console.log(res)
         return res.data
       })
     );

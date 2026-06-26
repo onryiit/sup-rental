@@ -60,7 +60,7 @@
           <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'ADMIN.COL_STATUS' | translate }}</mat-header-cell>
           <mat-cell *matCellDef="let row">
             <span class="badge" [class]="'badge-' + row.status">
-              {{ ('ADMIN.STATUS_' + row.status.toUpperCase()) | translate }}
+              {{getNameForStatus(row.status)}}
             </span>
           </mat-cell>
         </ng-container>
