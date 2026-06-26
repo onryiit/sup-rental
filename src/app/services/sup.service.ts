@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map, Observable, of } from 'rxjs';
+import { map, Observable, of } from 'rxjs'; // 'of' mock metodlar için
 import { Beach, Sup, RentalDuration, ApiResponse } from '../models';
 import { environment } from '../../environments/environment';
 
@@ -59,10 +59,9 @@ export class SupService {
     return RENTAL_DURATIONS;
   }
 
-  createSup(sup: Omit<Sup, 'id'>): Observable<Sup> {
-    // TODO: return this.http.post<Sup>(`${this.apiUrl}/sups`, sup);
-    const newSup: Sup = { ...sup, id: `sup-${Date.now()}` };
-    MOCK_SUPS.push(newSup);
-    return of(newSup);
+  createSup(sup: any): Observable<Sup> {
+    return this.http.post<ApiResponse<{ id: string }>>(`${this.apiUrl}/sups`, sup).pipe(
+      map(res => ({ ...sup }))
+    );
   }
 }

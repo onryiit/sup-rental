@@ -79,8 +79,11 @@ export class AdminSupsComponent implements OnInit, OnDestroy {
     });
     ref.afterClosed().pipe(takeUntil(this.destroy$)).subscribe((result: AddSupDialogResult | undefined) => {
       if (!result) return;
-      this.supService.createSup(result.sup as Omit<Sup, 'id'>).subscribe(created => {
-        this.supsData$.next([...this.supsData$.value, created]);
+      this.supService.createSup(result.sup).subscribe(() => {
+        this.supService.getAllSups().pipe(takeUntil(this.destroy$)).subscribe(s => {
+          this.supsData$.next(s);
+          this.cd.detectChanges();
+        });
       });
     });
   }
