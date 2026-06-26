@@ -9,28 +9,27 @@ import { environment } from '../../environments/environment';
 interface AuthTokens {
   idToken: string;
   accessToken: string;
+  refreshToken?: string;
   expiresIn: number;
 }
 
-interface StoredSession {
-  user: User;
-  expiresAt: number; // unix ms
-}
-
-const SESSION_KEY = 'sup_session';
-const REFRESH_BEFORE_MS = 5 * 60 * 1000; // expire'dan 5 dakika önce yenile
+const USER_KEY = 'sup_user';
+const REFRESH_TOKEN_KEY = 'sup_rft';
+const REFRESH_BEFORE_MS = 5 * 60 * 1000;
+const AUTH_OPTIONS = { withCredentials: true };
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private http = inject(HttpClient);
   private userSubject  = new BehaviorSubject<User | null>(null);
   private readySubject = new BehaviorSubject<boolean>(false);
+
   private idToken: string | null = null;
   private accessToken: string | null = null;
   private refreshTimer: any = null;
 
   user$  = this.userSubject.asObservable();
-  ready$ = this.readySubject.asObservable(); // guard bunu bekler
+  ready$ = this.readySubject.asObservable();
 
   constructor(private router: Router) {}
 
@@ -40,44 +39,28 @@ export class AuthService {
   get bearerToken(): string | null { return this.idToken; }
   get isAdmin(): boolean           { return !!this.currentUser?.roles?.includes('Admin'); }
 
-  /** AppComponent ngOnInit'ten çağrılır */
   initSession(): void {
-    const session = this.loadSession();
-
-    if (!session) {
-      this.readySubject.next(true);
-      return;
-    }
-
-    const msLeft = session.expiresAt - Date.now();
-
-    if (msLeft > 0) {
-      // Token hâlâ geçerli ama yakın zamanda expire olacaksa refresh yap
-      if (msLeft < REFRESH_BEFORE_MS) {
-        this.doRefresh(session.user);
-      } else {
-        // Token geçerli — refresh cookie'den yeni idToken al
-        this.doRefresh(session.user);
-      }
-    } else {
-      // Token süresi dolmuş, refresh cookie ile yenile
-      this.doRefresh(session.user);
-    }
+    const user = this.loadUser();
+    if (user) this.userSubject.next(user);
+    this.doRefresh(user ?? undefined);
   }
 
   private doRefresh(fallbackUser?: User): void {
-    this.http.post<AuthTokens>(`${environment.apiUrl}/auth/refresh`, {}, { withCredentials: true })
-      .subscribe({
-        next: tokens => {
-          this.applyTokens(tokens, fallbackUser);
-          this.readySubject.next(true);
-        },
-        error: () => {
-          // Refresh cookie süresi de dolmuş
-          this.clearSession();
-          this.readySubject.next(true);
-        },
-      });
+    const rft = localStorage.getItem(REFRESH_TOKEN_KEY);
+    this.http.post<AuthTokens>(
+      `${environment.apiUrl}/auth/refresh`,
+      rft ? { refreshToken: rft } : {},
+      AUTH_OPTIONS,
+    ).subscribe({
+      next: tokens => {
+        this.applyTokens(tokens, fallbackUser);
+        this.readySubject.next(true);
+      },
+      error: () => {
+        this.clearSession();
+        this.readySubject.next(true);
+      },
+    });
   }
 
   register(name: string, email: string, phone: string, password: string): Observable<any> {
@@ -92,22 +75,22 @@ export class AuthService {
     return this.http.post<AuthTokens>(
       `${environment.apiUrl}/auth/login`,
       { email, password },
-      { withCredentials: true }
+      AUTH_OPTIONS,
     ).pipe(
       tap(tokens => this.applyTokens(tokens))
     );
   }
 
   refresh(): Observable<AuthTokens> {
+    const rft = localStorage.getItem(REFRESH_TOKEN_KEY);
     return this.http.post<AuthTokens>(
       `${environment.apiUrl}/auth/refresh`,
-      {},
-      { withCredentials: true }
+      rft ? { refreshToken: rft } : {},
+      AUTH_OPTIONS,
     ).pipe(
       tap(tokens => {
         this.idToken = tokens.idToken;
         this.scheduleRefresh(tokens.expiresIn);
-        this.updateStoredExpiry(tokens.expiresIn);
       })
     );
   }
@@ -116,7 +99,7 @@ export class AuthService {
     this.http.post(
       `${environment.apiUrl}/auth/logout`,
       { accessToken: this.accessToken },
-      { withCredentials: true }
+      AUTH_OPTIONS,
     ).subscribe({ error: () => {} });
     this.clearSession();
   }
@@ -127,6 +110,10 @@ export class AuthService {
     this.idToken     = tokens.idToken;
     this.accessToken = tokens.accessToken;
 
+    if (tokens.refreshToken) {
+      localStorage.setItem(REFRESH_TOKEN_KEY, tokens.refreshToken);
+    }
+
     const payload = this.decodeJwtPayload(tokens.idToken);
     const user: User = existingUser ?? {
       id:    payload.sub,
@@ -136,8 +123,7 @@ export class AuthService {
       roles: payload['cognito:groups'] || [],
     };
 
-    const expiresAt = Date.now() + tokens.expiresIn * 1000;
-    this.saveSession({ user, expiresAt });
+    this.saveUser(user);
     this.userSubject.next(user);
     this.scheduleRefresh(tokens.expiresIn);
   }
@@ -150,29 +136,22 @@ export class AuthService {
     }, delay);
   }
 
-  private updateStoredExpiry(expiresIn: number): void {
-    const session = this.loadSession();
-    if (session) {
-      session.expiresAt = Date.now() + expiresIn * 1000;
-      this.saveSession(session);
-    }
+  private saveUser(user: User): void {
+    localStorage.setItem(USER_KEY, JSON.stringify(user));
+    this.userSubject.next(user);
   }
 
-  private saveSession(session: StoredSession): void {
-    localStorage.setItem(SESSION_KEY, JSON.stringify(session));
-    this.userSubject.next(session.user);
-  }
-
-  private loadSession(): StoredSession | null {
+  private loadUser(): User | null {
     try {
-      const raw = localStorage.getItem(SESSION_KEY);
+      const raw = localStorage.getItem(USER_KEY);
       return raw ? JSON.parse(raw) : null;
     } catch { return null; }
   }
 
   private clearSession(): void {
     if (this.refreshTimer) clearTimeout(this.refreshTimer);
-    localStorage.removeItem(SESSION_KEY);
+    localStorage.removeItem(USER_KEY);
+    localStorage.removeItem(REFRESH_TOKEN_KEY);
     this.userSubject.next(null);
     this.idToken     = null;
     this.accessToken = null;

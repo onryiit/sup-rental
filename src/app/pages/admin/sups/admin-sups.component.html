@@ -6,7 +6,6 @@
     { label: 'ADMIN.TAB_SUPS', translate: true }
   ]"></app-breadcrumb>
 
-  <!-- Add SUP button shown in the header right side -->
   <div pageActions>
     <button class="btn-add-sup" (click)="openAddSupDialog()">
       <span class="material-symbols-outlined">add</span>
@@ -15,41 +14,91 @@
   </div>
 
   <div class="page-inner">
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>{{ 'ADMIN.COL_NAME' | translate }}</th>
-            <th>{{ 'ADMIN.COL_QR' | translate }}</th>
-            <th>{{ 'ADMIN.COL_BEACH' | translate }}</th>
-            <th>{{ 'ADMIN.COL_CABINET' | translate }}</th>
-            <th>{{ 'ADMIN.COL_STATUS' | translate }}</th>
-            <th>{{ 'ADMIN.COL_ACTION' | translate }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let s of sups">
-            <td><strong>{{ s.name }}</strong></td>
-            <td><code>{{ s.qrCode }}</code></td>
-            <td>{{ getBeachName(s.beachId) }}</td>
-            <td>#{{ s.cabinetNumber }}</td>
-            <td>
-              <span class="badge" [class]="'badge-' + s.status">
-                {{ ('ADMIN.STATUS_' + s.status.toUpperCase()) | translate }}
-              </span>
-            </td>
-            <td>
-              <button class="btn-action" (click)="unlockManual(s)">
-                <span class="material-symbols-outlined">lock_open</span>
-                {{ 'ADMIN.UNLOCK' | translate }}
+    <div class="mat-table-card">
+
+      <!-- Search toolbar -->
+      <div class="mat-toolbar-row">
+        <div class="search-box">
+          <span class="material-symbols-outlined">search</span>
+          <input
+            type="text"
+            placeholder="{{ 'ADMIN.SEARCH_SUP' | translate }}"
+            (input)="searchFilter($any($event.target).value)"
+          />
+        </div>
+      </div>
+
+      <!-- Table -->
+      <mat-table [dataSource]="dataSource" matSort>
+
+        <!-- Name -->
+        <ng-container matColumnDef="name">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'ADMIN.COL_NAME' | translate }}</mat-header-cell>
+          <mat-cell *matCellDef="let row"><strong>{{ row.name }}</strong></mat-cell>
+        </ng-container>
+
+        <!-- QR Code -->
+        <ng-container matColumnDef="qrCode">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'ADMIN.COL_QR' | translate }}</mat-header-cell>
+          <mat-cell *matCellDef="let row"><code>{{ row.qrCode }}</code></mat-cell>
+        </ng-container>
+
+        <!-- Beach -->
+        <ng-container matColumnDef="beach">
+          <mat-header-cell *matHeaderCellDef>{{ 'ADMIN.COL_BEACH' | translate }}</mat-header-cell>
+          <mat-cell *matCellDef="let row">{{ getBeachName(row.beachId) }}</mat-cell>
+        </ng-container>
+
+        <!-- Cabinet Number -->
+        <ng-container matColumnDef="cabinetNumber">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'ADMIN.COL_CABINET' | translate }}</mat-header-cell>
+          <mat-cell *matCellDef="let row">#{{ row.cabinetNumber }}</mat-cell>
+        </ng-container>
+
+        <!-- Status -->
+        <ng-container matColumnDef="status">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'ADMIN.COL_STATUS' | translate }}</mat-header-cell>
+          <mat-cell *matCellDef="let row">
+            <span class="badge" [class]="'badge-' + row.status">
+              {{ ('ADMIN.STATUS_' + row.status.toUpperCase()) | translate }}
+            </span>
+          </mat-cell>
+        </ng-container>
+
+        <!-- Actions -->
+        <ng-container matColumnDef="actions">
+          <mat-header-cell *matHeaderCellDef></mat-header-cell>
+          <mat-cell *matCellDef="let row">
+            <button class="btn-menu" [matMenuTriggerFor]="rowMenu">
+              <span class="material-symbols-outlined">more_vert</span>
+            </button>
+            <mat-menu #rowMenu="matMenu">
+              <button mat-menu-item (click)="unlockManual(row)">
+                <span class="material-symbols-outlined menu-icon">lock_open</span>
+                <span>{{ 'ADMIN.UNLOCK' | translate }}</span>
               </button>
-            </td>
-          </tr>
-          <tr *ngIf="sups.length === 0">
-            <td colspan="6" class="empty-row">{{ 'ADMIN.NO_ACTIVE' | translate }}</td>
-          </tr>
-        </tbody>
-      </table>
+            </mat-menu>
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+        <!-- Empty state -->
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell empty-row" [attr.colspan]="displayedColumns.length">
+            {{ 'ADMIN.NO_SUPS' | translate }}
+          </td>
+        </tr>
+      </mat-table>
+
+      <mat-paginator
+        [pageSize]="10"
+        [pageSizeOptions]="[5, 10, 25, 50]"
+        showFirstLastButtons>
+      </mat-paginator>
+
     </div>
   </div>
+
 </app-page-layout>

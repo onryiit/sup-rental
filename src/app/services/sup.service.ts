@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { Beach, Sup, RentalDuration } from '../models';
+import { map, Observable, of } from 'rxjs';
+import { Beach, Sup, RentalDuration, ApiResponse } from '../models';
 import { environment } from '../../environments/environment';
 
 const MOCK_BEACHES: Beach[] = [
@@ -28,7 +28,7 @@ export class SupService {
   private http = inject(HttpClient);
   private apiUrl = environment.apiUrl;
 
-  
+
 
   getSupByQrCode(qrCode: string): Observable<Sup | null> {
     // TODO: this.http.get<Sup>(`${this.apiUrl}/sups/qr/${qrCode}`)
@@ -43,8 +43,12 @@ export class SupService {
   }
 
   getAllSups(): Observable<Sup[]> {
-    // TODO: this.http.get<Sup[]>(`${this.apiUrl}/sups`)
-    return of(MOCK_SUPS);
+    return this.http.get<ApiResponse<Sup[]>>(`${this.apiUrl}/sups`).pipe(
+      map(res => {
+        console.log(res)
+        return res.data
+      })
+    );
   }
 
   getAllBeaches(): Observable<Beach[]> {

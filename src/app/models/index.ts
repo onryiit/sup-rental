@@ -1,3 +1,7 @@
+export interface ApiResponse<T> {
+  statusCode: number;
+  data: T;
+}
 export interface Beach {
   id: string;
   name: string;

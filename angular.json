@@ -69,7 +69,6 @@
               "buildTarget": "sup-rental:build:production"
             },
             "development": {
-              "proxyConfig": "proxy.conf.json",
               "buildTarget": "sup-rental:build:development"
             }
           },

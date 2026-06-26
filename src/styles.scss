@@ -1,6 +1,19 @@
 /* Angular Material prebuilt theme — only targets .mat-* / .mdc-* selectors, no global overrides */
 @import '@angular/material/prebuilt-themes/azure-blue.css';
 
+/* Override Material MDC font — does NOT affect icon fonts (material-symbols-outlined uses its own font-face) */
+:root {
+  --mdc-typography-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --mat-table-row-item-label-text-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --mat-table-header-headline-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --mat-menu-item-label-text-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --mat-select-trigger-text-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --mat-paginator-container-text-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --mdc-filled-text-field-label-text-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --mdc-outlined-text-field-label-text-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --mat-form-field-container-text-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

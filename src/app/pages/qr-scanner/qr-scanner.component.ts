@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgIf } from '@angular/common';
 import { Html5Qrcode } from 'html5-qrcode';
@@ -14,7 +14,7 @@ type ScanState = 'idle' | 'scanning' | 'found' | 'error' | 'denied';
     templateUrl: './qr-scanner.component.html',
     styleUrls: ['./qr-scanner.component.scss']
 })
-export class QrScannerComponent implements OnInit, OnDestroy {
+export class QrScannerComponent implements OnInit, AfterViewInit, OnDestroy {
   state: ScanState = 'idle';
   errorMessage = '';
   scannedCode = '';
@@ -22,27 +22,33 @@ export class QrScannerComponent implements OnInit, OnDestroy {
 
   constructor(private router: Router) {}
 
-  ngOnInit(): void {
-    this.startScan();
+  ngOnInit(): void {}
+
+  ngAfterViewInit(): void {
+    setTimeout(() => this.startScan(), 0);
   }
 
   startScan(): void {
     this.state = 'scanning';
-    this.scanner = new Html5Qrcode('qr-reader');
-    this.scanner
-      .start(
-        { facingMode: 'environment' },
-        { fps: 10, qrbox: { width: 240, height: 240 } },
-        (decodedText) => this.onScanSuccess(decodedText),
-        () => {}
-      )
-      .catch(err => {
-        const msg: string = err?.toString() ?? '';
-        this.state = msg.includes('NotAllowed') ? 'denied' : 'error';
-        this.errorMessage = msg.includes('NotAllowed')
-          ? 'Kamera izni reddedildi. Lütfen tarayıcı ayarlarından kamera iznini etkinleştirin.'
-          : 'Kamera açılamadı. Başka bir uygulama kamerayı kullanıyor olabilir.';
-      });
+    // Wait one frame for *ngIf to render the #qr-reader div
+    setTimeout(() => {
+      if (!document.getElementById('qr-reader')) return;
+      this.scanner = new Html5Qrcode('qr-reader');
+      this.scanner
+        .start(
+          { facingMode: 'environment' },
+          { fps: 10, qrbox: { width: 240, height: 240 } },
+          (decodedText) => this.onScanSuccess(decodedText),
+          () => {}
+        )
+        .catch(err => {
+          const msg: string = err?.toString() ?? '';
+          this.state = msg.includes('NotAllowed') ? 'denied' : 'error';
+          this.errorMessage = msg.includes('NotAllowed')
+            ? 'Kamera izni reddedildi. Lütfen tarayıcı ayarlarından kamera iznini etkinleştirin.'
+            : 'Kamera açılamadı. Başka bir uygulama kamerayı kullanıyor olabilir.';
+        });
+    }, 0);
   }
 
   private onScanSuccess(code: string): void {

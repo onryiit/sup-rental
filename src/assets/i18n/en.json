@@ -179,7 +179,9 @@
     "SUP_ADDED": "SUP added successfully!",
     "QR_READY": "QR Code Ready",
     "QR_HINT": "Print this QR code and stick it on top of the cabinet.",
-    "PRINT_QR": "Print QR"
+    "PRINT_QR": "Print QR",
+    "NO_SUPS": "No SUPs found.",
+    "SEARCH_SUP": "Search SUPs..."
   },
   "SUCCESS": {
     "TITLE": "Payment Successful!",

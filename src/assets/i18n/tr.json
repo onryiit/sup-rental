@@ -179,7 +179,9 @@
     "SUP_ADDED": "SUP başarıyla eklendi!",
     "QR_READY": "QR Kod Hazır",
     "QR_HINT": "Bu QR kodu yazdırıp kabinin üstüne yapıştırın.",
-    "PRINT_QR": "QR Yazdır"
+    "PRINT_QR": "QR Yazdır",
+    "NO_SUPS": "Kayıtlı SUP bulunamadı.",
+    "SEARCH_SUP": "SUP ara..."
   },
   "SUCCESS": {
     "TITLE": "Ödeme Başarılı!",
