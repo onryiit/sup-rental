@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgFor, NgIf, DatePipe } from '@angular/common';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { RentalService } from '../../../services/rental.service';
 import { PageLayoutComponent } from '../../../components/page-layout/page-layout.component';
@@ -8,7 +9,7 @@ import { BreadcrumbComponent } from '../../../components/breadcrumb/breadcrumb.c
 @Component({
   selector: 'app-admin-rentals',
   standalone: true,
-  imports: [NgFor, NgIf, DatePipe, TranslatePipe, PageLayoutComponent, BreadcrumbComponent],
+  imports: [NgFor, NgIf, DatePipe, TranslatePipe, PageLayoutComponent, BreadcrumbComponent, RouterLink, RouterLinkActive],
   templateUrl: './admin-rentals.component.html',
   styleUrls: ['../admin-shared.scss'],
 })

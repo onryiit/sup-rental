@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { NgFor, NgIf, NgClass } from '@angular/common';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -29,6 +30,7 @@ import { AddSupDialogComponent, AddSupDialogResult } from './add-sup-dialog/add-
     NgClass,
     MatMenuModule, MatIconModule, MatButtonModule,
     PageLayoutComponent, BreadcrumbComponent,
+    RouterLink, RouterLinkActive,
   ],
   templateUrl: './admin-sups.component.html',
   styleUrls: ['../admin-shared.scss'],

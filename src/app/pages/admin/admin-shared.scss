@@ -291,7 +291,46 @@
   &:hover { background: #f1f5f9; color: #0077b6; }
 }
 
+/* ── Admin tab navigation ── */
+.admin-tabs {
+  display: flex;
+  border-bottom: 1px solid #e2e8f0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 20px;
+
+  a {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 16px;
+    border: none;
+    border-bottom: 3px solid transparent;
+    background: transparent;
+    color: #64748b;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    text-decoration: none;
+    transition: color 0.15s;
+
+    span { font-size: 18px; }
+
+    &:hover { color: #0077b6; }
+    &.active {
+      color: #0077b6;
+      border-bottom-color: #0077b6;
+    }
+  }
+}
+
 @media (max-width: 768px) {
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
   .page-inner { padding: 16px; overflow-x: auto; }
+  .admin-tabs {
+    padding: 0 12px;
+    a { padding: 10px 12px; font-size: 13px; }
+    a span { display: none; }
+  }
 }

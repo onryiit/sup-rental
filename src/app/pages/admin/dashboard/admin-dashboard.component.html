@@ -6,6 +6,21 @@
     { label: 'ADMIN.TAB_DASHBOARD', translate: true }
   ]"></app-breadcrumb>
 
+  <div class="admin-tabs">
+    <a routerLink="/admin/dashboard" routerLinkActive="active">
+      <span class="material-symbols-outlined">dashboard</span>
+      {{ 'ADMIN.TAB_DASHBOARD' | translate }}
+    </a>
+    <a routerLink="/admin/sups" routerLinkActive="active">
+      <span class="material-symbols-outlined">surfing</span>
+      {{ 'ADMIN.TAB_SUPS' | translate }}
+    </a>
+    <a routerLink="/admin/rentals" routerLinkActive="active">
+      <span class="material-symbols-outlined">receipt_long</span>
+      {{ 'ADMIN.TAB_RENTALS' | translate }}
+    </a>
+  </div>
+
   <div class="page-inner">
 
     <div class="stats-grid">

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgFor, NgIf, DecimalPipe } from '@angular/common';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { SupService } from '../../../services/sup.service';
 import { RentalService } from '../../../services/rental.service';
@@ -10,7 +11,7 @@ import { BreadcrumbComponent } from '../../../components/breadcrumb/breadcrumb.c
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [NgFor, NgIf, DecimalPipe, TranslatePipe, PageLayoutComponent, BreadcrumbComponent],
+  imports: [NgFor, NgIf, DecimalPipe, TranslatePipe, PageLayoutComponent, BreadcrumbComponent, RouterLink, RouterLinkActive],
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['../admin-shared.scss'],
 })
