@@ -16,7 +16,7 @@ import { navigation, NavItem } from '../../navigation/navigation';
 export class NavbarComponent {
   @Output() sidebarToggled = new EventEmitter<boolean>();
 
-  sidebarOpen = false;
+  sidebarOpen = localStorage.getItem('sidebarOpen') !== 'false';
 
   // Track which collapsable group is currently expanded (by item id)
   expandedGroup: string | null = null;
@@ -63,6 +63,7 @@ export class NavbarComponent {
 
   toggleSidebar(): void {
     this.sidebarOpen = !this.sidebarOpen;
+    localStorage.setItem('sidebarOpen', String(this.sidebarOpen));
     this.sidebarToggled.emit(this.sidebarOpen);
   }
 }

@@ -15,7 +15,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 })
 export class AppComponent implements OnInit {
   title = 'Aqua SUP';
-  sidebarOpen = false;
+  sidebarOpen = localStorage.getItem('sidebarOpen') !== 'false';
 
   constructor(public auth: AuthService, public lang: LanguageService) {}
 
