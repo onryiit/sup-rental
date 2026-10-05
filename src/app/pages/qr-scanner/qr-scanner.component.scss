@@ -51,8 +51,14 @@
   max-width: 340px;
   border-radius: 16px;
   overflow: hidden;
-  // html5-qrcode injects video here
   video { border-radius: 16px; }
+
+  // Hide html5-qrcode built-in scan border — we draw our own corners
+  ::ng-deep #qr-shaded-region,
+  ::ng-deep div[style*="border:"] {
+    border: none !important;
+    box-shadow: none !important;
+  }
 }
 
 /* Overlay corners drawn on top */
