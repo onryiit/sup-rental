@@ -69,8 +69,8 @@ export class AdminComponent implements OnInit {
     });
   }
 
-  get availableCount(): number { return this.sups.filter(s => s.status === 'available').length; }
-  get rentedCount(): number { return this.sups.filter(s => s.status === 'rented').length; }
+  get availableCount(): number { return this.sups.filter(s => s.status === '1').length; }
+  get rentedCount(): number { return this.sups.filter(s => s.status === '2').length; }
   get todayRevenue(): number {
     const today = new Date().toDateString();
     return this.rentals

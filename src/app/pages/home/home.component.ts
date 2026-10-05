@@ -33,15 +33,16 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = this.auth.currentUser;
-    this.activeRentalId = this.meterService.getActiveRentalId();
     this.supService.getAllBeaches().subscribe(b => (this.beaches = b));
 
-    if (this.user) {
-      this.rentalService.getUserRentals(this.user.id).subscribe(rentals => {
-        this.pastRentals = rentals.slice(0, 5);
+    this.meterService.getMyRentals().subscribe({
+      next: res => {
+        this.activeRentalId = res.active?.id ?? null;
+        this.pastRentals = res.history.slice(0, 5);
         this.loading = false;
-      });
-    }
+      },
+      error: () => { this.loading = false; },
+    });
   }
 
   goScan(): void { this.router.navigate(['/scan']); }

@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, BehaviorSubject } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 export interface MeterStatus {
   rentalId: string;
@@ -28,6 +31,7 @@ export interface StartRentalRequest {
   userName: string;
   userPhone: string;
   userEmail?: string;
+  cardId?: string | null;
 }
 
 export interface StartRentalResponse {
@@ -38,61 +42,34 @@ export interface StartRentalResponse {
   preAuthAmount: number;
 }
 
-const ACTIVE_RENTAL_KEY = 'sup_active_rental';
-const ACTIVE_RENTAL_START = 'sup_active_rental_start';
-
-const CONFIG: MeterConfig = { pricePerMinute: 3, preAuthAmount: 500, maxHours: 24 };
+export interface MyRentalsResponse {
+  active: any | null;
+  history: any[];
+}
 
 @Injectable({ providedIn: 'root' })
 export class MeterService {
-  private activeRentalId$ = new BehaviorSubject<string | null>(
-    localStorage.getItem(ACTIVE_RENTAL_KEY)
-  );
+  constructor(private http: HttpClient) {}
 
   getConfig(): Observable<MeterConfig> {
-    return of(CONFIG);
+    return of({ pricePerMinute: 3, preAuthAmount: 500, maxHours: 24 });
   }
 
-  startRental(data: StartRentalRequest): Observable<StartRentalResponse> {
-    const rentalId = 'RNT-' + Date.now();
-    const startTime = new Date().toISOString();
-    localStorage.setItem(ACTIVE_RENTAL_START, startTime);
-    return of({
-      ok: true,
-      rentalId,
-      startTime,
-      pricePerMinute: CONFIG.pricePerMinute,
-      preAuthAmount: CONFIG.preAuthAmount,
-    });
+  getMyRentals(): Observable<MyRentalsResponse> {
+    return this.http.get<any>(`${environment.apiUrl}/rentals/my`).pipe(
+      map(res => res.data ?? res)
+    );
   }
 
   getStatus(rentalId: string): Observable<MeterStatus> {
-    const startTime = localStorage.getItem(ACTIVE_RENTAL_START) || new Date().toISOString();
-    const elapsedMinutes = Math.floor((Date.now() - new Date(startTime).getTime()) / 60000);
-    const maxMinutes = CONFIG.maxHours * 60;
-    return of({
-      rentalId,
-      status: 'active',
-      startTime,
-      elapsedMinutes,
-      estimatedPrice: elapsedMinutes * CONFIG.pricePerMinute,
-      pricePerMinute: CONFIG.pricePerMinute,
-      preAuthAmount: CONFIG.preAuthAmount,
-      isOverdue: elapsedMinutes >= maxMinutes,
-      maxMinutes,
-    });
+    return this.http.get<any>(`${environment.apiUrl}/meter/status/${rentalId}`).pipe(
+      map(res => res.data ?? res)
+    );
   }
 
-  setActiveRentalId(id: string | null): void {
-    if (id) localStorage.setItem(ACTIVE_RENTAL_KEY, id);
-    else {
-      localStorage.removeItem(ACTIVE_RENTAL_KEY);
-      localStorage.removeItem(ACTIVE_RENTAL_START);
-    }
-    this.activeRentalId$.next(id);
-  }
-
-  getActiveRentalId(): string | null {
-    return localStorage.getItem(ACTIVE_RENTAL_KEY);
+  returnSup(rentalId: string): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}/meter/return`, { rentalId }).pipe(
+      map(res => res.data ?? res)
+    );
   }
 }

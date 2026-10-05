@@ -1,0 +1,133 @@
+<app-page-layout icon="person" title="{{ 'PROFILE.TITLE' | translate }}">
+  <div class="profile-page">
+
+    <!-- ── 1. Personal Info ──────────────────────────────────────── -->
+    <section class="profile-section">
+      <h2 class="section-title">{{ 'PROFILE.INFO_TITLE' | translate }}</h2>
+      <div class="state-screen" *ngIf="profileLoading"><div class="wave-spinner"><div></div><div></div><div></div></div></div>
+      <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" *ngIf="!profileLoading">
+        <div class="field">
+          <label>{{ 'AUTH.NAME' | translate }}</label>
+          <div class="input-wrap"><span class="input-icon">👤</span>
+            <input type="text" formControlName="name" [placeholder]="'AUTH.NAME_PLACEHOLDER' | translate" />
+          </div>
+          <span class="field-error" *ngIf="profileForm.get('name')?.touched && profileForm.get('name')?.invalid">{{ 'AUTH.NAME_ERROR' | translate }}</span>
+        </div>
+        <div class="field">
+          <label>{{ 'AUTH.PHONE' | translate }}</label>
+          <div class="input-wrap"><span class="input-icon">📱</span>
+            <input type="tel" formControlName="telephone_no" [placeholder]="'AUTH.PHONE_PLACEHOLDER' | translate" />
+          </div>
+          <span class="field-error" *ngIf="profileForm.get('telephone_no')?.touched && profileForm.get('telephone_no')?.invalid">{{ 'AUTH.PHONE_ERROR' | translate }}</span>
+        </div>
+        <div class="field">
+          <label>{{ 'AUTH.TC_ID' | translate }}</label>
+          <div class="input-wrap"><span class="input-icon">🪪</span>
+            <input type="text" formControlName="tc_id_number" placeholder="12345678901" maxlength="11" inputmode="numeric" />
+          </div>
+          <span class="field-error" *ngIf="profileForm.get('tc_id_number')?.touched && profileForm.get('tc_id_number')?.invalid">{{ 'AUTH.TC_ID_ERROR' | translate }}</span>
+        </div>
+        <div class="field">
+          <label>{{ 'AUTH.ADDRESS' | translate }}</label>
+          <div class="input-wrap"><span class="input-icon">📍</span>
+            <input type="text" formControlName="address" [placeholder]="'AUTH.ADDRESS_PLACEHOLDER' | translate" />
+          </div>
+          <span class="field-error" *ngIf="profileForm.get('address')?.touched && profileForm.get('address')?.invalid">{{ 'AUTH.ADDRESS_ERROR' | translate }}</span>
+        </div>
+        <div class="success-banner" *ngIf="profileSuccess">✅ {{ 'PROFILE.SAVED' | translate }}</div>
+        <div class="error-banner"   *ngIf="profileError">{{ profileError }}</div>
+        <button type="submit" class="btn-primary" [disabled]="profileSaving">
+          <span *ngIf="!profileSaving">{{ 'COMMON.SAVE' | translate }}</span>
+          <span *ngIf="profileSaving" class="btn-spinner"></span>
+        </button>
+      </form>
+    </section>
+
+    <!-- ── 2. Change Password ────────────────────────────────────── -->
+    <section class="profile-section">
+      <h2 class="section-title">{{ 'PROFILE.CHANGE_PW_TITLE' | translate }}</h2>
+      <form [formGroup]="pwForm" (ngSubmit)="changePassword()">
+        <div class="field">
+          <label>{{ 'AUTH.OLD_PASSWORD' | translate }}</label>
+          <div class="input-wrap"><span class="input-icon">🔑</span>
+            <input [type]="showOldPw ? 'text' : 'password'" formControlName="oldPassword" [placeholder]="'AUTH.OLD_PASSWORD_PLACEHOLDER' | translate" />
+            <button type="button" class="toggle-pw" (click)="showOldPw = !showOldPw">{{ showOldPw ? '🙈' : '👁️' }}</button>
+          </div>
+          <span class="field-error" *ngIf="pwForm.get('oldPassword')?.touched && pwForm.get('oldPassword')?.invalid">{{ 'AUTH.PASSWORD_ERROR_8' | translate }}</span>
+        </div>
+        <div class="field">
+          <label>{{ 'AUTH.NEW_PASSWORD' | translate }}</label>
+          <div class="input-wrap"><span class="input-icon">🔒</span>
+            <input [type]="showNewPw ? 'text' : 'password'" formControlName="newPassword" [placeholder]="'AUTH.NEW_PASSWORD_PLACEHOLDER' | translate" />
+            <button type="button" class="toggle-pw" (click)="showNewPw = !showNewPw">{{ showNewPw ? '🙈' : '👁️' }}</button>
+          </div>
+          <span class="field-error" *ngIf="pwForm.get('newPassword')?.touched && pwForm.get('newPassword')?.invalid">{{ 'AUTH.PASSWORD_ERROR_8' | translate }}</span>
+        </div>
+        <div class="field">
+          <label>{{ 'AUTH.CONFIRM_PASSWORD' | translate }}</label>
+          <div class="input-wrap"><span class="input-icon">🔒</span>
+            <input [type]="showCnfPw ? 'text' : 'password'" formControlName="confirmPassword" [placeholder]="'AUTH.CONFIRM_PASSWORD_PLACEHOLDER' | translate" />
+            <button type="button" class="toggle-pw" (click)="showCnfPw = !showCnfPw">{{ showCnfPw ? '🙈' : '👁️' }}</button>
+          </div>
+          <span class="field-error" *ngIf="pwMismatch">{{ 'AUTH.CONFIRM_PASSWORD_ERROR' | translate }}</span>
+        </div>
+        <div class="success-banner" *ngIf="pwSuccess">✅ {{ 'AUTH.CHANGE_PASSWORD_SUCCESS' | translate }}</div>
+        <div class="error-banner"   *ngIf="pwError">{{ pwError }}</div>
+        <button type="submit" class="btn-primary" [disabled]="pwSaving || pwForm.invalid">
+          <span *ngIf="!pwSaving">{{ 'AUTH.CHANGE_PASSWORD_BTN' | translate }}</span>
+          <span *ngIf="pwSaving" class="btn-spinner"></span>
+        </button>
+      </form>
+    </section>
+
+    <!-- ── 3. Cards ──────────────────────────────────────────────── -->
+    <section class="profile-section">
+      <div class="section-header">
+        <h2 class="section-title">{{ 'CARD.TITLE' | translate }}</h2>
+        <button class="btn-add-card" (click)="showAddCardForm()" *ngIf="!cardFormShown">
+          + {{ 'CARD.ADD_TITLE' | translate }}
+        </button>
+      </div>
+
+      <div class="state-screen" *ngIf="cardLoading"><div class="wave-spinner"><div></div><div></div><div></div></div></div>
+
+      <!-- Success banner from iyzico redirect -->
+      <div class="success-banner" *ngIf="cardSuccess">✅ {{ 'CARD.SUCCESS_TITLE' | translate }}</div>
+
+      <!-- Card list -->
+      <div class="card-list" *ngIf="!cardLoading && cards.length > 0">
+        <div class="card-item" *ngFor="let c of cards" [class.is-default]="c.isDefault">
+          <div class="card-item-visual">
+            <span class="card-chip">▬▬</span>
+            <span class="card-number">•••• {{ c.lastFourDigits }}</span>
+            <span class="card-alias">{{ c.cardAlias }}</span>
+          </div>
+          <div class="card-item-actions">
+            <span class="default-badge" *ngIf="c.isDefault">{{ 'CARD.DEFAULT' | translate }}</span>
+            <button class="btn-set-default" *ngIf="!c.isDefault" (click)="setDefault(c.cardId)">{{ 'CARD.SET_DEFAULT' | translate }}</button>
+            <button class="btn-icon-delete" (click)="deleteCard(c.cardId)" title="Remove">🗑</button>
+          </div>
+        </div>
+      </div>
+
+      <p class="empty-cards" *ngIf="!cardLoading && cards.length === 0 && !cardFormShown">
+        {{ 'CARD.NO_CARDS' | translate }}
+      </p>
+
+      <!-- iyzico form -->
+      <div class="card-form-wrap" *ngIf="cardFormShown">
+        <div class="form-info">
+          <div class="form-info-icon">💳</div>
+          <h3>{{ 'CARD.ADD_TITLE' | translate }}</h3>
+          <p>{{ 'CARD.ADD_DESC' | translate }}</p>
+        </div>
+        <div id="iyzipay-checkout-form-profile" class="responsive" style="width:100%"></div>
+
+        <div class="error-banner" *ngIf="cardError">{{ cardError }}</div>
+        <p class="secure-note">🔒 {{ 'CARD.SECURE_NOTE' | translate }}</p>
+        <button class="btn-cancel" (click)="cardFormShown = false">{{ 'COMMON.CANCEL' | translate }}</button>
+      </div>
+    </section>
+
+  </div>
+</app-page-layout>

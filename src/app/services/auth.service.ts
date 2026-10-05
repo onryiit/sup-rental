@@ -21,23 +21,24 @@ const AUTH_OPTIONS = { withCredentials: true };
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private http = inject(HttpClient);
-  private userSubject  = new BehaviorSubject<User | null>(null);
+  private userSubject = new BehaviorSubject<User | null>(null);
   private readySubject = new BehaviorSubject<boolean>(false);
 
   private idToken: string | null = null;
   private accessToken: string | null = null;
   private refreshTimer: any = null;
 
-  user$  = this.userSubject.asObservable();
+  user$ = this.userSubject.asObservable();
   ready$ = this.readySubject.asObservable();
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) { }
 
-  get currentUser(): User | null   { return this.userSubject.value; }
-  get isLoggedIn(): boolean        { return !!this.currentUser && !!this.idToken; }
-  get isReady(): boolean           { return this.readySubject.value; }
+  get currentUser(): User | null { return this.userSubject.value; }
+  get isLoggedIn(): boolean { return !!this.currentUser && !!this.idToken; }
+  get isReady(): boolean { return this.readySubject.value; }
   get bearerToken(): string | null { return this.idToken; }
-  get isAdmin(): boolean           { return !!this.currentUser?.roles?.includes('Admin'); }
+  get isAdmin(): boolean { return !!this.currentUser?.roles?.includes('Admin'); }
+  get currentAccessToken(): string | null { return this.accessToken; }
 
   initSession(): void {
     const user = this.loadUser();
@@ -71,6 +72,25 @@ export class AuthService {
     return this.http.post(`${environment.apiUrl}/auth/confirm`, { email, code });
   }
 
+  resendCode(email: string): Observable<any> {
+    return this.http.post(`${environment.apiUrl}/auth/resend`, { email });
+  }
+
+  saveUserProfile(name: string, telephone_no: string, tc_id_number: string, address: string): Observable<any> {
+    return this.http.post(`${environment.apiUrl}/auth/user`, { name, telephone_no, tc_id_number, address });
+  }
+
+  getUserProfile(): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/auth/user`);
+  }
+
+  changePassword(previousPassword: string, proposedPassword: string): Observable<any> {
+    return this.http.post(
+      `${environment.apiUrl}/auth/change-password`,
+      { accessToken: this.accessToken, previousPassword, proposedPassword },
+    );
+  }
+
   login(email: string, password: string): Observable<AuthTokens> {
     return this.http.post<AuthTokens>(
       `${environment.apiUrl}/auth/login`,
@@ -100,14 +120,14 @@ export class AuthService {
       `${environment.apiUrl}/auth/logout`,
       { accessToken: this.accessToken },
       AUTH_OPTIONS,
-    ).subscribe({ error: () => {} });
+    ).subscribe({ error: () => { } });
     this.clearSession();
   }
 
   // ── Private helpers ───────────────────────────────────────────────
 
   private applyTokens(tokens: AuthTokens, existingUser?: User): void {
-    this.idToken     = tokens.idToken;
+    this.idToken = tokens.idToken;
     this.accessToken = tokens.accessToken;
 
     if (tokens.refreshToken) {
@@ -116,8 +136,8 @@ export class AuthService {
 
     const payload = this.decodeJwtPayload(tokens.idToken);
     const user: User = existingUser ?? {
-      id:    payload.sub,
-      name:  payload.name || [payload.given_name, payload.family_name].filter(Boolean).join(' ') || '',
+      id: payload.sub,
+      name: payload.name || [payload.given_name, payload.family_name].filter(Boolean).join(' ') || '',
       email: payload.email || '',
       phone: payload.phone_number || '',
       roles: payload['cognito:groups'] || [],
@@ -153,7 +173,7 @@ export class AuthService {
     localStorage.removeItem(USER_KEY);
     localStorage.removeItem(REFRESH_TOKEN_KEY);
     this.userSubject.next(null);
-    this.idToken     = null;
+    this.idToken = null;
     this.accessToken = null;
     this.router.navigate(['/login']);
   }

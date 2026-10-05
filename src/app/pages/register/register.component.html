@@ -45,6 +45,28 @@
         </div>
 
         <div class="field">
+          <label>{{ 'AUTH.TC_ID' | translate }}</label>
+          <div class="input-wrap">
+            <span class="input-icon">🪪</span>
+            <input type="text" formControlName="tc_id_number" placeholder="12345678901" maxlength="11" inputmode="numeric" />
+          </div>
+          <span class="field-error" *ngIf="form.get('tc_id_number')?.touched && form.get('tc_id_number')?.invalid">
+            {{ 'AUTH.TC_ID_ERROR' | translate }}
+          </span>
+        </div>
+
+        <div class="field">
+          <label>{{ 'AUTH.ADDRESS' | translate }}</label>
+          <div class="input-wrap">
+            <span class="input-icon">📍</span>
+            <input type="text" formControlName="address" [placeholder]="'AUTH.ADDRESS_PLACEHOLDER' | translate" />
+          </div>
+          <span class="field-error" *ngIf="form.get('address')?.touched && form.get('address')?.invalid">
+            {{ 'AUTH.ADDRESS_ERROR' | translate }}
+          </span>
+        </div>
+
+        <div class="field">
           <label>{{ 'AUTH.PASSWORD' | translate }}</label>
           <div class="input-wrap">
             <span class="input-icon">🔒</span>
@@ -59,9 +81,24 @@
           </span>
         </div>
 
+        <div class="field">
+          <label>{{ 'AUTH.CONFIRM_PASSWORD' | translate }}</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔒</span>
+            <input [type]="showConfirmPw ? 'text' : 'password'" formControlName="confirmPassword"
+              [placeholder]="'AUTH.CONFIRM_PASSWORD_PLACEHOLDER' | translate" />
+            <button type="button" class="toggle-pw" (click)="showConfirmPw = !showConfirmPw">
+              {{ showConfirmPw ? '🙈' : '👁️' }}
+            </button>
+          </div>
+          <span class="field-error" *ngIf="passwordMismatch">
+            {{ 'AUTH.CONFIRM_PASSWORD_ERROR' | translate }}
+          </span>
+        </div>
+
         <div class="error-banner" *ngIf="error">{{ error }}</div>
 
-        <button type="submit" class="btn-primary" [disabled]="loading">
+        <button type="submit" class="btn-primary" [disabled]="loading || form.invalid">
           <span *ngIf="!loading">{{ 'AUTH.REGISTER_BTN' | translate }}</span>
           <span *ngIf="loading" class="btn-spinner"></span>
         </button>
@@ -93,13 +130,25 @@
 
         <div class="error-banner" *ngIf="error">{{ error }}</div>
 
-        <button type="submit" class="btn-primary" [disabled]="loading">
+        <button type="submit" class="btn-primary" [disabled]="loading || confirmForm.invalid">
           <span *ngIf="!loading">{{ 'AUTH.VERIFY_BTN' | translate }}</span>
           <span *ngIf="loading" class="btn-spinner"></span>
         </button>
       </form>
 
-      <p class="alt-link" style="margin-top: 16px;">
+      <div class="resend-row">
+        <ng-container *ngIf="countdown > 0">
+          <span class="resend-timer">{{ 'AUTH.RESEND_WAIT' | translate }} {{ countdownFormatted }}</span>
+        </ng-container>
+        <ng-container *ngIf="countdown === 0">
+          <a class="resend-link" (click)="resendCode()" [class.disabled]="resending">
+            <span *ngIf="!resending">{{ 'AUTH.RESEND_CODE' | translate }}</span>
+            <span *ngIf="resending" class="btn-spinner small"></span>
+          </a>
+        </ng-container>
+      </div>
+
+      <p class="alt-link" style="margin-top: 8px;">
         <a (click)="step = 'register'" style="cursor:pointer">← {{ 'COMMON.BACK' | translate }}</a>
       </p>
     </ng-container>

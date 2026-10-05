@@ -1,1 +1,26 @@
 @import '../login/login.component.scss';
+
+.resend-row {
+  text-align: center;
+  margin-top: 14px;
+  font-size: 13px;
+}
+
+.resend-timer {
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.resend-link {
+  color: #0077b6;
+  font-weight: 600;
+  cursor: pointer;
+  &:hover { text-decoration: underline; }
+  &.disabled { opacity: 0.5; pointer-events: none; }
+}
+
+.btn-spinner.small {
+  width: 14px;
+  height: 14px;
+  border-width: 2px;
+}

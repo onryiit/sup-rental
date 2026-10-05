@@ -1,11 +1,11 @@
 <app-page-layout icon="dashboard" title="{{ 'ADMIN.TAB_DASHBOARD' | translate }}">
 
-  <!-- Toolbar slot: breadcrumb -->
   <app-breadcrumb pageToolbar [items]="[
     { label: 'NAV.HOME', translate: true, url: '/home' },
     { label: 'NAV.ADMIN', translate: true },
     { label: 'ADMIN.TAB_DASHBOARD', translate: true }
   ]"></app-breadcrumb>
+
   <div class="page-inner">
 
     <div class="stats-grid">
@@ -36,7 +36,9 @@
       {{ 'ADMIN.ACTIVE_RENTALS' | translate }}
     </div>
 
-    <div class="table-wrap">
+    <div *ngIf="loading" class="empty-row">Yükleniyor...</div>
+
+    <div class="table-wrap" *ngIf="!loading">
       <table>
         <thead>
           <tr>
@@ -54,8 +56,8 @@
             <td>{{ r.qrCode }}</td>
             <td>{{ getBeachName(r.beachId) }}</td>
             <td>#{{ r.cabinetNumber }}</td>
-            <td>{{ r.durationMinutes }} {{ 'ACTIVE.MIN' | translate }}</td>
-            <td><strong>₺{{ r.price }}</strong></td>
+            <td>{{ r.elapsedMinutes }} {{ 'ACTIVE.MIN' | translate }}</td>
+            <td><strong>~₺{{ r.estimatedPrice | number:'1.0-0' }}</strong></td>
           </tr>
           <tr *ngIf="activeRentals.length === 0">
             <td colspan="6" class="empty-row">{{ 'ADMIN.NO_ACTIVE' | translate }}</td>

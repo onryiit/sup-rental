@@ -44,7 +44,6 @@
       ⚠️ {{ 'SUMMARY.UNAVAILABLE_MSG' | translate }} <strong>{{ statusLabel | lowercase }}</strong>. {{ 'SUMMARY.TRY_ANOTHER' | translate }}
     </div>
 
-    <!-- Meter Pricing (only when available) -->
     <ng-container *ngIf="sup.status === '1'">
 
       <!-- Pricing info -->
@@ -54,7 +53,6 @@
           <span class="price-unit">/ {{ 'ACTIVE.MIN' | translate }}</span>
         </div>
         <p class="pricing-sub">{{ 'SUMMARY.PRICING_SUB' | translate }}</p>
-
         <div class="pricing-rows">
           <div class="pricing-row">
             <span>🔒 {{ 'SUMMARY.PREAUTH' | translate }}</span>
@@ -69,26 +67,6 @@
             <strong>₺{{ maxCost }}</strong>
           </div>
         </div>
-      </div>
-
-      <!-- Card status -->
-      <div class="card-status" *ngIf="auth.isLoggedIn">
-        <div class="cs-left">
-          <span class="cs-icon" *ngIf="cardInfo?.hasCard">💳</span>
-          <span class="cs-icon" *ngIf="!cardInfo?.hasCard">⚠️</span>
-          <div>
-            <div class="cs-title" *ngIf="cardInfo?.hasCard">
-              {{ 'SUMMARY.CARD_REGISTERED' | translate }} · •••• {{ cardInfo?.lastFourDigits }}
-            </div>
-            <div class="cs-title warn" *ngIf="!cardInfo?.hasCard">
-              {{ 'SUMMARY.NO_CARD_MSG' | translate }}
-            </div>
-            <div class="cs-sub">{{ 'SUMMARY.CARD_SUB' | translate }}</div>
-          </div>
-        </div>
-        <button class="cs-change" routerLink="/card-setup">
-          {{ (cardInfo?.hasCard ? 'SUMMARY.CHANGE_CARD' : 'SUMMARY.ADD_CARD') | translate }}
-        </button>
       </div>
 
       <!-- How it works -->
@@ -107,12 +85,19 @@
         </div>
       </div>
 
+      <!-- iyzico form -->
+      <div class="iyzico-wrap" *ngIf="formShown">
+        <div id="iyzipay-checkout-form-rental"></div>
+        <button class="btn-cancel" (click)="cancelForm()">{{ 'COMMON.CANCEL' | translate }}</button>
+      </div>
+
+      <!-- Error -->
+      <div class="form-error" *ngIf="formError">⚠️ {{ formError }}</div>
+
       <!-- CTA -->
-      <button class="btn-start" [disabled]="starting" (click)="startRental()">
-        <span *ngIf="!starting">
-          {{ (cardInfo?.hasCard ? 'SUMMARY.START_BTN' : 'SUMMARY.ADD_CARD') | translate }}
-        </span>
-        <span *ngIf="starting" class="btn-spinner"></span>
+      <button class="btn-start" *ngIf="!formShown" [disabled]="formLoading" (click)="proceedToPayment()">
+        <span *ngIf="!formLoading">{{ 'SUMMARY.PROCEED_TO_PAYMENT' | translate }}</span>
+        <span *ngIf="formLoading" class="btn-spinner"></span>
       </button>
 
       <p class="secure-note">🔒 {{ 'SUMMARY.SECURE_NOTE' | translate }}</p>

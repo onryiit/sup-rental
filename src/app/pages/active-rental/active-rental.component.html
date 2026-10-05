@@ -83,7 +83,14 @@
         <div class="return-step"><span class="rs-num">3</span><span>{{ 'ACTIVE.RETURN_STEP3' | translate }}</span></div>
       </div>
 
+      <button class="btn-return" (click)="returnSup()">{{ 'ACTIVE.RETURN_BTN' | translate }}</button>
       <button class="btn-home" (click)="goHome()">{{ 'ACTIVE.GO_HOME' | translate }}</button>
+    </div>
+
+    <!-- Returning -->
+    <div class="state-screen" *ngIf="state === 'returning'">
+      <div class="wave-spinner"><div></div><div></div><div></div></div>
+      <p>{{ 'ACTIVE.RETURNING' | translate }}</p>
     </div>
 
   </div>

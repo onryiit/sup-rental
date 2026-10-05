@@ -17,6 +17,11 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'profile',
+    loadComponent: () => import('./pages/profile/profile.component').then(c => c.ProfileComponent),
+    canActivate: [authGuard],
+  },
+  {
     path: 'scan',
     loadComponent: () => import('./pages/qr-scanner/qr-scanner.component').then(c => c.QrScannerComponent),
     canActivate: [authGuard],

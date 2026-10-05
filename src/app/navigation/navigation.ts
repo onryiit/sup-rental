@@ -56,12 +56,12 @@ export const navigation: NavItem[] = [
     url: '/active-rental',
   },
   {
-    id: 'card-setup',
-    title: 'Card',
-    translate: 'NAV.CARD',
+    id: 'profile',
+    title: 'Profile',
+    translate: 'NAV.PROFILE',
     type: 'item',
-    icon: 'credit_card',
-    url: '/card-setup',
+    icon: 'manage_accounts',
+    url: '/profile',
   },
 
   // ── Admin group ────────────────────────────────────────────────────────────

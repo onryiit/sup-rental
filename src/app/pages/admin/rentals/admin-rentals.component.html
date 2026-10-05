@@ -4,17 +4,21 @@
     { label: 'NAV.ADMIN', translate: true },
     { label: 'ADMIN.TAB_RENTALS', translate: true }
   ]"></app-breadcrumb>
+
   <div class="page-inner">
-    <div class="table-wrap">
+
+    <div *ngIf="loading" class="empty-row">Yükleniyor...</div>
+
+    <div class="table-wrap" *ngIf="!loading">
       <table>
         <thead>
           <tr>
             <th>ID</th>
             <th>{{ 'ADMIN.COL_QR' | translate }}</th>
-            <th>{{ 'ADMIN.COL_PHONE' | translate }}</th>
+            <th>{{ 'ADMIN.COL_BEACH' | translate }}</th>
+            <th>Başlangıç</th>
             <th>{{ 'ADMIN.COL_DURATION' | translate }}</th>
             <th>{{ 'ADMIN.COL_AMOUNT' | translate }}</th>
-            <th>{{ 'ADMIN.COL_PAYMENT_REF' | translate }}</th>
             <th>{{ 'ADMIN.COL_STATUS' | translate }}</th>
           </tr>
         </thead>
@@ -22,10 +26,10 @@
           <tr *ngFor="let r of rentals">
             <td><code>{{ r.id }}</code></td>
             <td>{{ r.qrCode }}</td>
-            <td>{{ r.phoneNumber }}</td>
-            <td>{{ r.durationMinutes }} {{ 'ACTIVE.MIN' | translate }}</td>
-            <td><strong>₺{{ r.price }}</strong></td>
-            <td><code>{{ r.paymentRef }}</code></td>
+            <td>{{ r.beachId }}</td>
+            <td>{{ r.startTime | date:'dd.MM.yy HH:mm' }}</td>
+            <td>{{ formatDuration(r) }}</td>
+            <td><strong>{{ formatPrice(r) }}</strong></td>
             <td>
               <span class="badge" [class]="'badge-' + r.status">
                 {{ ('ADMIN.RENTAL_' + r.status.toUpperCase()) | translate }}
@@ -38,5 +42,6 @@
         </tbody>
       </table>
     </div>
+
   </div>
 </app-page-layout>

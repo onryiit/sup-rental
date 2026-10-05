@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Rental, RentalDuration } from '../models';
 import { environment } from '../../environments/environment';
 
@@ -50,30 +51,13 @@ export class RentalService {
     this.activeRental = rental;
   }
 
-  getAdminRentals(): Observable<Rental[]> {
-    // TODO: this.http.get<Rental[]>(`${this.apiUrl}/rentals`)
-    return of(this.mockHistory);
+  getAdminRentals(): Observable<{ active: any[]; completed: any[]; all: any[] }> {
+    return this.http.get<any>(`${this.apiUrl}/admin/rentals`).pipe(
+      map(res => res.data ?? res)
+    );
   }
 
   getUserRentals(userId: string): Observable<Rental[]> {
-    // TODO: this.http.get<Rental[]>(`${this.apiUrl}/rentals?userId=${userId}`)
-    return of(this.mockHistory);
+    return this.http.get<any[]>(`${this.apiUrl}/rentals?userId=${userId}`);
   }
-
-  private mockHistory: Rental[] = [
-    {
-      id: 'RNT-0011', supId: 'sup-001', qrCode: 'QR-OLUD-001', beachId: 'beach-001',
-      cabinetNumber: 1, startTime: new Date(Date.now() - 2 * 86400000),
-      endTime: new Date(Date.now() - 2 * 86400000 + 3600000),
-      durationMinutes: 60, price: 250, paymentRef: 'PAYTR-8821',
-      status: 'completed', phoneNumber: '05301234567',
-    },
-    {
-      id: 'RNT-0008', supId: 'sup-003', qrCode: 'QR-PATA-001', beachId: 'beach-002',
-      cabinetNumber: 1, startTime: new Date(Date.now() - 5 * 86400000),
-      endTime: new Date(Date.now() - 5 * 86400000 + 7200000),
-      durationMinutes: 120, price: 400, paymentRef: 'PAYTR-7743',
-      status: 'completed', phoneNumber: '05301234567',
-    },
-  ];
 }

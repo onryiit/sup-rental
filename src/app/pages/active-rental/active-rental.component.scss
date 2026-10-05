@@ -150,8 +150,20 @@
 /* ── Buttons ── */
 .btn-primary, .btn-home {
   display: block; margin: 4px 16px 0;
+  width: calc(100% - 32px);
   background: linear-gradient(135deg, #0077b6, #0096c7);
   color: white; border: none; border-radius: 14px; padding: 16px;
   font-size: 16px; font-weight: 700; cursor: pointer; text-align: center;
   &:hover { opacity: 0.9; }
+}
+
+.btn-return {
+  display: block; margin: 20px 16px 8px;
+  background: linear-gradient(135deg, #e63946, #d62828);
+  color: white; border: none; border-radius: 14px; padding: 18px;
+  font-size: 17px; font-weight: 700; cursor: pointer; text-align: center;
+  width: calc(100% - 32px);
+  box-shadow: 0 4px 14px rgba(230, 57, 70, 0.35);
+  &:hover { opacity: 0.9; }
+  &:active { transform: scale(0.98); }
 }

@@ -2,34 +2,35 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgIf, LowerCasePipe } from '@angular/common';
 import { SupService } from '../../services/sup.service';
-import { MeterService } from '../../services/meter.service';
-import { CardService, CardInfo } from '../../services/card.service';
+import { CardService } from '../../services/card.service';
 import { AuthService } from '../../services/auth.service';
+import { MeterService } from '../../services/meter.service';
 import { Sup, Beach } from '../../models';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
-    selector: 'app-rental-summary',
-    imports: [NgIf, LowerCasePipe, TranslatePipe],
-    templateUrl: './rental-summary.component.html',
-    styleUrls: ['./rental-summary.component.scss']
+  selector: 'app-rental-summary',
+  imports: [NgIf, LowerCasePipe, TranslatePipe],
+  templateUrl: './rental-summary.component.html',
+  styleUrls: ['./rental-summary.component.scss']
 })
 export class RentalSummaryComponent implements OnInit {
   sup: Sup | null = null;
   beach: Beach | null = null;
-  cardInfo: CardInfo | null = null;
   meterConfig: { pricePerMinute: number; preAuthAmount: number; maxHours: number } | null = null;
   loading = true;
-  starting = false;
   notFound = false;
+  formLoading = false;
+  formError = '';
+  formShown = false;
   qrCode = '';
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private supService: SupService,
-    private meterService: MeterService,
     private cardService: CardService,
+    private meterService: MeterService,
     public auth: AuthService
   ) {}
 
@@ -42,68 +43,73 @@ export class RentalSummaryComponent implements OnInit {
 
     this.meterService.getConfig().subscribe(cfg => this.meterConfig = cfg);
 
-    const user = this.auth.currentUser;
-    if (user) {
-      this.cardService.getCard(user.id).subscribe(c => this.cardInfo = c);
-    }
-
-    this.supService.getSupByQrCode(this.qrCode).subscribe(sup => {
-      if (!sup) { this.notFound = true; this.loading = false; return; }
-      this.sup = sup;
-      this.supService.getBeach(sup.beachId).subscribe(b => {
-        this.beach = b;
-        this.loading = false;
-      });
+    this.supService.getSupByQrCode(this.qrCode).subscribe({
+      next: sup => {
+        if (!sup) { this.notFound = true; this.loading = false; return; }
+        this.sup = sup;
+        this.supService.getBeach(sup.beachId).subscribe(b => {
+          this.beach = b;
+          this.loading = false;
+        });
+      },
+      error: () => { this.notFound = true; this.loading = false; }
     });
   }
 
-  startRental(): void {
-    if (!this.sup || this.starting) return;
-
+  proceedToPayment(): void {
     if (!this.auth.isLoggedIn) { this.router.navigate(['/login']); return; }
+    if (!this.sup) return;
 
-    if (!this.cardInfo?.hasCard) {
-      localStorage.setItem('sup_pending_rental', this.qrCode);
-      this.router.navigate(['/card-setup']);
-      return;
-    }
-
-    this.starting = true;
+    this.formLoading = true;
+    this.formError = '';
     const user = this.auth.currentUser!;
 
-    this.meterService.startRental({
-      userId: user.id,
+    this.cardService.initRentalForm({
+      user: { id: user.id, name: user.name, phone: user.phone, email: user.email },
       supId: this.sup.id,
       qrCode: this.sup.qrCode,
       beachId: this.sup.beachId,
       cabinetNumber: this.sup.cabinetNumber,
-      userName: user.name,
-      userPhone: user.phone,
-      userEmail: user.email,
     }).subscribe({
       next: res => {
-        this.meterService.setActiveRentalId(res.rentalId);
-        this.router.navigate(['/active-rental']);
+        this.formShown = true;
+        this.formLoading = false;
+        setTimeout(() => {
+          const container = document.getElementById('iyzipay-checkout-form-rental');
+          if (container && (window as any).iyziInit) {
+            new (window as any).iyziInit({ token: res.token, container, node: container });
+          } else if (container) {
+            container.innerHTML = res.checkoutFormContent;
+            const scripts = container.querySelectorAll('script');
+            scripts.forEach((s: HTMLScriptElement) => {
+              const ns = document.createElement('script');
+              if (s.src) { ns.src = s.src; } else { ns.textContent = s.textContent; }
+              document.body.appendChild(ns);
+            });
+          }
+        }, 100);
       },
       error: err => {
-        this.starting = false;
-        if (err.error?.code === 'NO_CARD') {
-          localStorage.setItem('sup_pending_rental', this.qrCode);
-          this.router.navigate(['/card-setup']);
-        } else {
-          alert(err.error?.error || 'Kiralama başlatılamadı.');
-        }
-      },
+        this.formLoading = false;
+        this.formError = err.error?.message || err.error?.error || err.message || 'Could not initialize payment form';
+      }
     });
+  }
+
+  cancelForm(): void {
+    this.formShown = false;
+    this.formError = '';
+    const container = document.getElementById('iyzipay-checkout-form-rental');
+    if (container) container.innerHTML = '';
   }
 
   goBack(): void { this.router.navigate(['/scan']); }
 
   get statusLabel(): string {
     switch (this.sup?.status) {
-      case '1': return 'Müsait';
-      case '2': return 'Kiralanmış';
-      case '3': return 'Bakımda';
+      case '1': return 'Available';
+      case '2': return 'Rented';
+      case '3': return 'Maintenance';
       default: return '';
     }
   }
