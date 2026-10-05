@@ -1,7 +1,7 @@
 <app-page-layout icon="admin_panel_settings" title="{{ 'ADMIN.TITLE' | translate }}">
 
-  <!-- Aksiyon alanı: tab butonları sağ üstte -->
-  <div pageActions class="tab-group">
+  <!-- Tab bar — content içinde, hem desktop hem mobile uyumlu -->
+  <div class="admin-tabs">
     <button [class.active]="activeTab==='dashboard'" (click)="setTab('dashboard')">
       <span class="material-symbols-outlined">dashboard</span>
       {{ 'ADMIN.TAB_DASHBOARD' | translate }}

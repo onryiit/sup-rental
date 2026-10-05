@@ -1,26 +1,35 @@
-/* Tab butonları (sağ üst köşe aksiyonları) */
-.tab-group {
+/* Tab bar — content üstünde, mobil uyumlu */
+.admin-tabs {
   display: flex;
-  gap: 6px;
+  gap: 4px;
+  padding: 16px 20px 0;
+  border-bottom: 1px solid #e2e8f0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 
   button {
     display: flex;
     align-items: center;
     gap: 6px;
-    padding: 8px 16px;
+    padding: 10px 18px;
     border: none;
-    border-radius: 10px;
-    background: rgba(255,255,255,0.15);
-    color: rgba(255,255,255,0.8);
-    font-size: 13px;
+    border-bottom: 3px solid transparent;
+    border-radius: 0;
+    background: transparent;
+    color: #64748b;
+    font-size: 14px;
     font-weight: 600;
     cursor: pointer;
+    white-space: nowrap;
     transition: all 0.15s;
 
     span { font-size: 18px; }
 
-    &:hover { background: rgba(255,255,255,0.25); color: white; }
-    &.active { background: white; color: #0077b6; }
+    &:hover { color: #0077b6; }
+    &.active {
+      color: #0077b6;
+      border-bottom-color: #0077b6;
+    }
   }
 }
 
@@ -171,8 +180,9 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .tab-group {
-    flex-wrap: wrap;
+  .admin-tabs {
+    padding: 12px 12px 0;
+    button { padding: 8px 14px; font-size: 13px; }
     button span { display: none; }
   }
 
